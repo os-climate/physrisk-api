@@ -35,8 +35,7 @@ def create_app(debug=False):
 
     app = Flask(__name__)
 
-    if 'DOMINO_PROJECT_NAME' in os.environ:
-        app.wsgi_app = ReverseProxied(app.wsgi_app)
+    app.wsgi_app = ReverseProxied(app.wsgi_app)
 
     # Set the secret key to some random bytes. Keep this really secret!
     app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
