@@ -1,27 +1,12 @@
+FROM python:3.8
 
-####
-# Simple Dockerfile to test image build and pushing
-#
-# Build the image with:
-#
-# docker build -f docker/Dockerfile -t physrisk-api .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8081:8081 physrisk-api
-####
-FROM python:slim
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-WORKDIR /app
+ONBUILD COPY /requirements.txt /usr/src/app/
+ONBUILD RUN pip install --no-cache-dir -r requirements.txt
 
-RUN python3 -m venv venv
-RUN . venv/bin/activate
+ONBUILD COPY . /usr/src/app
 
-# optimize image caching
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-
-EXPOSE 8081
-CMD [ "waitress-serve", "--port=8081", "app:app"]
+# EXPOSE 8081
+# CMD [ "waitress-serve", "--port=8081", "app:app"]
