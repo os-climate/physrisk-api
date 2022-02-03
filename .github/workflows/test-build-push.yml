@@ -1,4 +1,4 @@
-# Workflow to build Docker image, based on openshift.yml
+# Workflow to build Docker image, based on openshift.yml (excluding OpenShift deployment)
 
 name: Run tests, build and push image
 
