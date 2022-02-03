@@ -4,9 +4,7 @@ name: Run tests, build and push image
 
 env:
   APP_NAME: "physrisk-api"
-  IMAGE_REGISTRY: quay.io/os-climate
-  IMAGE_REGISTRY_USER: ${{ github.actor }} # need to update with real credentials
-  IMAGE_REGISTRY_PASSWORD: ${{ github.token }} # need to update with real credentials
+  IMAGE_REGISTRY: "quay.io/os-climate"
   IMAGE_TAGS: ""
 
 on:
@@ -54,8 +52,8 @@ jobs:
         image: ${{ steps.build-image.outputs.image }}
         tags: ${{ steps.build-image.outputs.tags }}
         registry: ${{ env.IMAGE_REGISTRY }}
-        username: ${{ env.IMAGE_REGISTRY_USER }}
-        password: ${{ env.IMAGE_REGISTRY_PASSWORD }}
+        username: ${{ secret.OSC_QUAY_ROBOT_USER }}
+        password: ${{ secret.OSC_QUAY_ROBOT_TOKEN }}
           
           
 
