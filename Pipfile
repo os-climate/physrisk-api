@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+waitress = "*"
+Flask = "*"
+
+[dev-packages]
+pre-commit = "*"
+pytest = "*"
+tox = "*"
+black = "*"
+isort = "*"
+flake8 = "*"
+
+[requires]
+python_version = "3.8"
