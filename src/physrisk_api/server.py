@@ -1,18 +1,16 @@
-from app import create_app
+from .app import create_app
 
 app = create_app(debug=False)
 
 
-@app.route('/')
+@app.route("/")
 def home():
-    """ The App home page.
-
-    """
+    """The App home page."""
 
     return "Hello World !"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import logging
     import os
     import sys

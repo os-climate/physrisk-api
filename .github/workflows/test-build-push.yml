@@ -22,8 +22,8 @@ jobs:
       with:
         script: |
           const secrets = {
-            OSC_PHYSRISK_QUAY_USER: `${{ secrets.OSC_PHYSRISK_QUAY_USER }}`,
-            OSC_PHYSRISK_QUAY_TOKEN: `${{ secrets.OSC_PHYSRISK_QUAY_TOKEN }}`,
+            OSC_PHYSRISK_API_QUAY_USER: `${{ secrets.OSC_PHYSRISK_API_QUAY_USER }}`,
+            OSC_PHYSRISK_API_QUAY_TOKEN: `${{ secrets.OSC_PHYSRISK_API_QUAY_TOKEN }}`,
           };
 
           const missingSecrets = Object.entries(secrets).filter(([ name, value ]) => {
@@ -45,7 +45,7 @@ jobs:
           else {
             core.info(`✅ All the required secrets are set`);
           }
-    
+
     - name: Check out repository
       uses: actions/checkout@v2
 
@@ -81,8 +81,5 @@ jobs:
         image: ${{ steps.build-image.outputs.image }}
         tags: ${{ steps.build-image.outputs.tags }}
         registry: ${{ env.IMAGE_REGISTRY }}
-        username: ${{ secrets.OSC_PHYSRISK_QUAY_USER }}
-        password: ${{ secrets.OSC_PHYSRISK_QUAY_TOKEN }}
-          
-          
-
+        username: ${{ secrets.OSC_PHYSRISK_API_QUAY_USER }}
+        password: ${{ secrets.OSC_PHYSRISK_API_QUAY_TOKEN }}
