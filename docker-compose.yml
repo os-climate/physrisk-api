@@ -3,17 +3,15 @@ version: '2'
 services:
   web:
     restart: always
-    build: git@github.com/os-climate/physrisk-api.git
-    expose:
-    - "8000"
-    command: /usr/local/bin/gunicorn -w 2 -b :8000 project:app
+    build: .
+    ports:
+      - 8081:8081
 
   nginx:
     restart: always
-    build: /nginx
+    build: ./nginx
+    container_name: nginx
     ports:
-    - "80:80"
-    volumes:
-    - /www/static
+      - "8443:8443"
     depends_on:
-    - web
+      - web
