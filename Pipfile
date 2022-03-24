@@ -6,14 +6,15 @@ name = "pypi"
 [packages]
 waitress = "*"
 Flask = "*"
+physrisk-lib = ">=0.1.3"
 
 [dev-packages]
-pre-commit = "*"
 pytest = "*"
 tox = "*"
 black = "*"
 isort = "*"
 flake8 = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.8"

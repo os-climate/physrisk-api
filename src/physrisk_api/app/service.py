@@ -1,8 +1,13 @@
 from flask import Blueprint
 
-bp = Blueprint("service", __name__, url_prefix="/")
+from .api import api
+
+main = Blueprint("main", __name__, url_prefix="/")
+
+# Register all routes or blueprints with the 'main' blueprint.
+main.register_blueprint(api)
 
 
-@bp.get("/")
+@main.get("/")
 def home():
     return "Hello World!"
