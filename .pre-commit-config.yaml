@@ -1,6 +1,6 @@
 ---
 repos:
-  - repo: git://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
       - id: trailing-whitespace
@@ -18,8 +18,8 @@ repos:
       - id: check-ast
       - id: debug-statements
 
-  - repo: git://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.1.12
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.13
     hooks:
       - id: remove-tabs
 
