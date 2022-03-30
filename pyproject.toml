@@ -40,6 +40,5 @@ ensure_newline_before_comments = true
 line_length = 120
 
 [tool.coverage.run]
-source = "src"
-omit = "test/*"
+omit = ["test/*"]
 relative_files = true
