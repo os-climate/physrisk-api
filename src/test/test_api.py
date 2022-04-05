@@ -80,4 +80,70 @@ def test_hazard_data_no_items_in_response(mock_get, caplog):
         resp = do_hazard_data_request(test_client)
 
     assert resp.status_code == 404
-    assert "No items found for 'get_hazard_data' request" in caplog.text
+    assert "No results returned for 'get_hazard_data' request" in caplog.text
+
+
+@mock.patch("physrisk_api.app.api.get")
+def test_hazard_inventory_typical(mock_get):
+    app = create_app()
+
+    expected = {
+        "models": [
+            {
+                "event_type": "RiverineInundation",
+                "id": "riverine_inundation/wri/v2/000000000WATCH",
+                "scenarios": [{"id": "historical", "years": [1980]}],
+            },
+            {
+                "event_type": "RiverineInundation",
+                "id": "riverine_inundation/wri/v2/00000NorESM1-M",
+                "scenarios": [
+                    {"id": "rcp4p5", "years": [2030, 2050, 2080]},
+                    {"id": "rcp8p5", "years": [2030, 2050, 2080]},
+                ],
+            },
+            {
+                "event_type": "RiverineInundation",
+                "id": "riverine_inundation/wri/v2/0000GFDL-ESM2M",
+                "scenarios": [
+                    {"id": "rcp4p5", "years": [2030, 2050, 2080]},
+                    {"id": "rcp8p5", "years": [2030, 2050, 2080]},
+                ],
+            },
+        ]
+    }
+    # We don't need to test external libraries here, so mock physrisk's
+    # `get()` with realistic reponse to avoid looking up real data.
+    mock_get.return_value = json.dumps(expected)
+
+    with app.test_client() as test_client:
+        resp = test_client.get("/api/get_hazard_data_availability", json={})
+
+    assert resp.status_code == 200
+    assert resp.json == expected
+
+
+@mock.patch("physrisk_api.app.api.get")
+def test_hazard_inventory_invalid_request(mock_get, caplog):
+    app = create_app()
+
+    mock_get.side_effect = ValueError()
+
+    with app.test_client() as test_client:
+        resp = test_client.get("/api/get_hazard_data_availability", json={})
+
+    assert resp.status_code == 400
+    assert "Invalid 'get_hazard_data_availability' request" in caplog.text
+
+
+@mock.patch("physrisk_api.app.api.get")
+def test_hazard_inventory_no_items_in_response(mock_get, caplog):
+    app = create_app()
+
+    mock_get.return_value = '{"models": []}'
+
+    with app.test_client() as test_client:
+        resp = test_client.get("/api/get_hazard_data_availability", json={})
+
+    assert resp.status_code == 404
+    assert "No results returned for 'get_hazard_data_availability' request" in caplog.text
