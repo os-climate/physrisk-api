@@ -8,26 +8,9 @@ api = Blueprint("api", __name__, url_prefix="/api")
 
 
 @api.get("/get_hazard_data")
+@api.get("/get_hazard_data_availability")
 def hazard_data():
-    """Retrieve data objects with intensity curves for the requested
-    parameters.
-
-    Expected request data example:
-    {
-        "items": [
-            {
-                "item_id": "afac2a5d-9961-4f7b-af70-e7b6f46df20e",
-                "event_type": "RiverineInundation",
-                "longitudes": [69.4787],
-                "latitudes": [35.9416],
-                "year": 2080,
-                "scenario": "rcp8p5",
-                "model": "MIROC-ESM-CHEM"
-            },
-            ...
-        ]
-    }
-    """
+    """Retrieve data from physrisk library based on request URL and JSON data."""
 
     log = current_app.logger
     request_id = os.path.basename(request.path)
@@ -42,10 +25,10 @@ def hazard_data():
         log.error(f"Invalid '{request_id}' request", exc_info=exc_info)
         abort(400)
 
-    # Response object should hold a list of items.
-    # If not, no items were found matching the request's criteria.
-    if not resp_data.get("items"):
-        log.error(f"No items found for '{request_id}' request")
+    # Response object should hold a list of items or models.
+    # If not, none were found matching the request's criteria.
+    if not (resp_data.get("items") or resp_data.get("models")):
+        log.error(f"No results returned for '{request_id}' request")
         abort(404)
 
     return resp_data
