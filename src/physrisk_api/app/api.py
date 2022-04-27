@@ -7,8 +7,8 @@ from physrisk.requests import get
 api = Blueprint("api", __name__, url_prefix="/api")
 
 
-@api.get("/get_hazard_data")
-@api.get("/get_hazard_data_availability")
+@api.post("/get_hazard_data")
+@api.post("/get_hazard_data_availability")
 def hazard_data():
     """Retrieve data from physrisk library based on request URL and JSON data."""
 

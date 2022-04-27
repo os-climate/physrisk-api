@@ -7,7 +7,7 @@ from physrisk_api.app import create_app
 def do_hazard_data_request(client):
     """A minimal get_hazard_data request for testing purposes."""
 
-    return client.get(
+    return client.post(
         "/api/get_hazard_data",
         json={
             "items": [
@@ -117,7 +117,7 @@ def test_hazard_inventory_typical(mock_get):
     mock_get.return_value = json.dumps(expected)
 
     with app.test_client() as test_client:
-        resp = test_client.get("/api/get_hazard_data_availability", json={})
+        resp = test_client.post("/api/get_hazard_data_availability", json={})
 
     assert resp.status_code == 200
     assert resp.json == expected
@@ -130,7 +130,7 @@ def test_hazard_inventory_invalid_request(mock_get, caplog):
     mock_get.side_effect = ValueError()
 
     with app.test_client() as test_client:
-        resp = test_client.get("/api/get_hazard_data_availability", json={})
+        resp = test_client.post("/api/get_hazard_data_availability", json={})
 
     assert resp.status_code == 400
     assert "Invalid 'get_hazard_data_availability' request" in caplog.text
@@ -143,7 +143,7 @@ def test_hazard_inventory_no_items_in_response(mock_get, caplog):
     mock_get.return_value = '{"models": []}'
 
     with app.test_client() as test_client:
-        resp = test_client.get("/api/get_hazard_data_availability", json={})
+        resp = test_client.post("/api/get_hazard_data_availability", json={})
 
     assert resp.status_code == 404
     assert "No results returned for 'get_hazard_data_availability' request" in caplog.text
