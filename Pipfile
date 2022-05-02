@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 waitress = "*"
 Flask = "*"
+flask-cors = "*"
 physrisk-lib = ">=0.2.0"
 
 [dev-packages]
