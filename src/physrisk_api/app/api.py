@@ -9,6 +9,7 @@ api = Blueprint("api", __name__, url_prefix="/api")
 
 @api.post("/get_hazard_data")
 @api.post("/get_hazard_data_availability")
+@api.post("/get_asset_impact")
 def hazard_data():
     """Retrieve data from physrisk library based on request URL and JSON data."""
 
@@ -27,7 +28,7 @@ def hazard_data():
 
     # Response object should hold a list of items or models.
     # If not, none were found matching the request's criteria.
-    if not (resp_data.get("items") or resp_data.get("models")):
+    if not (resp_data.get("items") or resp_data.get("models") or resp_data.get("asset_impacts")):
         log.error(f"No results returned for '{request_id}' request")
         abort(404)
 
