@@ -1,5 +1,5 @@
 # physrisk-api
-API service for the OS-Climate phsyical risk tool
+API service for the OS-Climate physical risk tool
 
 ![Build Status](https://github.com/os-climate/physrisk-api/actions/workflows/ci.yml/badge.svg?branch=main)
 
