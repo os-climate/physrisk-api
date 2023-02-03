@@ -1,13 +1,13 @@
 import json
 import os
 
+import physrisk.requests
 from flask import Blueprint, abort, current_app, request
 from flask.helpers import make_response
-
-import physrisk.requests
 from physrisk.requests import get
 
 api = Blueprint("api", __name__, url_prefix="/api")
+
 
 @api.post("/get_hazard_data")
 @api.post("/get_hazard_data_availability")
@@ -37,23 +37,24 @@ def hazard_data():
     return resp_data
 
 
-@api.get('/images/<path:array_path>.png')
+@api.get("/images/<path:array_path>.png")
 def get_image(array_path):
     """Request that physrisk converts an array to image.
     This is intended for small arrays, say <~ 1500x1500 pixels. Otherwise we use Mapbox to host
-    tilesets (could consider storing tiles directly in S3 in future).  
+    tilesets (could consider storing tiles directly in S3 in future).
     """
     log = current_app.logger
     log.info(f"Creating raster image for {array_path}.")
-    min_value = request.args.get('minValue')
+    min_value = request.args.get("minValue")
     min_value = float(min_value) if min_value is not None else None
-    max_value = request.args.get('maxValue')
+    max_value = request.args.get("maxValue")
     max_value = float(max_value) if max_value is not None else None
-    colormap = request.args.get('colormap') 
+    colormap = request.args.get("colormap")
 
-    image_binary = physrisk.requests.get_image(array_path, colormap="heating", max_value=max_value, min_value=min_value)
+    image_binary = physrisk.requests.get_image(
+        array_path, colormap="heating" if colormap is None else colormap, max_value=max_value, min_value=min_value
+    )
     response = make_response(image_binary)
-    response.headers.set('Content-Type', 'image/png')
+    response.headers.set("Content-Type", "image/png")
 
     return response
-
