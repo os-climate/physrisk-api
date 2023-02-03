@@ -5,6 +5,7 @@ from flask import Blueprint, abort, current_app, request
 from flask.helpers import make_response
 
 import physrisk.requests
+from physrisk.requests import get
 
 api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -21,7 +22,7 @@ def hazard_data():
     log.debug(f"Received '{request_id}' request")
 
     try:
-        resp_data = physrisk.requests.get(request_id=request_id, request_dict=request_dict)
+        resp_data = get(request_id=request_id, request_dict=request_dict)
         resp_data = json.loads(resp_data)
     except Exception as exc_info:
         log.error(f"Invalid '{request_id}' request", exc_info=exc_info)
