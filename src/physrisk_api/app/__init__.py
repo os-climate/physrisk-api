@@ -19,7 +19,7 @@ def create_app():
 
     app = Flask(__name__)
     _ = JWTManager(app)
-    app.config["JWT_SECRET_KEY"] = os.environ["JWT_SECRET_KEY"]
+    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "not-to-be-used")
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(weeks=1)
 
     CORS(app)
