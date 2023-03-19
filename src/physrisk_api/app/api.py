@@ -2,11 +2,12 @@ import json
 import os
 from datetime import datetime, timedelta, timezone
 
-import physrisk.requests
+from dependency_injector.wiring import Provide, inject
 from flask import Blueprint, abort, current_app, jsonify, request
 from flask.helpers import make_response
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, verify_jwt_in_request
-from physrisk.requests import get
+from physrisk.container import Container
+from physrisk.requests import Requester
 
 api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -26,7 +27,8 @@ def create_token():
 @api.post("/get_hazard_data")
 @api.post("/get_hazard_data_availability")
 @api.post("/get_asset_impact")
-def hazard_data():
+@inject
+def hazard_data(requester: Requester = Provide[Container.requester]):
     """Retrieve data from physrisk library based on request URL and JSON data."""
 
     log = current_app.logger
@@ -39,12 +41,12 @@ def hazard_data():
         try:
             verify_jwt_in_request(optional=True)
             # if no JWT, default to 'public' access level
-            data_access = get_jwt()["data_access"]
+            data_access: str = get_jwt()["data_access"]
         except Exception as exc_info:
             log.warning(f"No JWT for '{request_id}' request", exc_info=exc_info)
-            data_access = "public"
-        request_dict["group_ids"] = [data_access]
-        resp_data = get(request_id=request_id, request_dict=request_dict)
+            data_access: str = "public"  # type:ignore
+        request_dict["group_ids"] = [data_access]  # type:ignore
+        resp_data = requester.get(request_id=request_id, request_dict=request_dict)
         resp_data = json.loads(resp_data)
     except Exception as exc_info:
         log.error(f"Invalid '{request_id}' request", exc_info=exc_info)
@@ -60,23 +62,24 @@ def hazard_data():
 
 
 @api.get("/images/<path:resource>.png")
-def get_image(resource):
+@inject
+def get_image(resource, requester: Requester = Provide[Container.requester]):
     """Request that physrisk converts an array to image.
     This is intended for small arrays, say <~ 1500x1500 pixels. Otherwise we use Mapbox to host
     tilesets (could consider storing tiles directly in S3 in future).
     """
     log = current_app.logger
     log.info(f"Creating raster image for {resource}.")
-    min_value = request.args.get("minValue")
-    min_value = float(min_value) if min_value is not None else None
-    max_value = request.args.get("maxValue")
-    max_value = float(max_value) if max_value is not None else None
+    min_value_arg = request.args.get("minValue")
+    min_value = float(min_value_arg) if min_value_arg is not None else None
+    max_value_arg = request.args.get("maxValue")
+    max_value = float(max_value_arg) if max_value_arg is not None else None
     colormap = request.args.get("colormap")
     scenarioId = request.args.get("scenarioId")
-    year = int(request.args.get("year"))
+    year = int(request.args.get("year"))  # type:ignore
     verify_jwt_in_request(optional=True)
     data_access = get_jwt().get("data_access", "public")
-    image_binary = physrisk.requests.get_image(
+    image_binary = requester.get_image(
         request_dict={
             "resource": resource,
             "colormap": "heating" if colormap is None else colormap,
@@ -90,6 +93,14 @@ def get_image(resource):
     response = make_response(image_binary)
     response.headers.set("Content-Type", "image/png")
     return response
+
+
+@api.get("/reset")
+@inject
+def reset(container: Container = Provide[Container]):
+    # container.requester.reset()
+    container.reset_singletons()
+    return "Reset successful"
 
 
 @api.after_request
