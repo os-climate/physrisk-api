@@ -10,7 +10,7 @@ from flask_jwt_extended import JWTManager
 from physrisk.container import Container
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from physrisk_api.app.override_providers import provide_s3_zarr_store
+from physrisk_api.app.override_providers import provide_inventory_reader, provide_s3_zarr_store
 
 from .service import main
 
@@ -25,6 +25,7 @@ def create_app():
     container = Container()
     container.wire(modules=[".api"])
     # this is not needed but demonstrates how to override providers in physrisk Container.
+    container.override_providers(inventory_reader=providers.Singleton(provide_inventory_reader))
     container.override_providers(zarr_store=providers.Singleton(provide_s3_zarr_store))
 
     app.container = container
