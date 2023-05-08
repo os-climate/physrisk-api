@@ -45,7 +45,7 @@ def hazard_data(requester: Requester = Provide[Container.requester]):
         except Exception as exc_info:
             log.warning(f"No JWT for '{request_id}' request", exc_info=exc_info)
             # 'public' or 'osc'
-            data_access: str = "osc" # type:ignore
+            data_access: str = "osc"  # type:ignore
         request_dict["group_ids"] = [data_access]  # type:ignore
         resp_data = requester.get(request_id=request_id, request_dict=request_dict)
         resp_data = json.loads(resp_data)
@@ -86,7 +86,7 @@ def get_image(resource, requester: Requester = Provide[Container.requester]):
     except Exception as exc_info:
         log.warning(f"No JWT for '{request_id}' request", exc_info=exc_info)
         # 'public' or 'osc'
-        data_access: str = "osc" # type:ignore
+        data_access: str = "osc"  # type:ignore
 
     image_binary = requester.get_image(
         request_dict={
@@ -134,7 +134,7 @@ def refresh_expiring_jwts(response):
         return response
     except Exception as exc_info:
         log = current_app.logger
-        log.error(f"Cannot refresh JWT", exc_info=exc_info)
+        log.error("Cannot refresh JWT", exc_info=exc_info)
         # Case where there is not a valid JWT. Just return the original response
         return response
 
