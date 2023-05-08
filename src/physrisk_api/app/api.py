@@ -41,10 +41,11 @@ def hazard_data(requester: Requester = Provide[Container.requester]):
         try:
             verify_jwt_in_request(optional=True)
             # if no JWT, default to 'public' access level
-            data_access: str = get_jwt()["data_access"]
+            data_access: str = get_jwt().get("data_access", "osc")
         except Exception as exc_info:
             log.warning(f"No JWT for '{request_id}' request", exc_info=exc_info)
-            data_access: str = "public"  # type:ignore
+            # 'public' or 'osc'
+            data_access: str = "osc" # type:ignore
         request_dict["group_ids"] = [data_access]  # type:ignore
         resp_data = requester.get(request_id=request_id, request_dict=request_dict)
         resp_data = json.loads(resp_data)
@@ -70,6 +71,7 @@ def get_image(resource, requester: Requester = Provide[Container.requester]):
     """
     log = current_app.logger
     log.info(f"Creating raster image for {resource}.")
+    request_id = os.path.basename(request.path)
     min_value_arg = request.args.get("minValue")
     min_value = float(min_value_arg) if min_value_arg is not None else None
     max_value_arg = request.args.get("maxValue")
@@ -77,8 +79,15 @@ def get_image(resource, requester: Requester = Provide[Container.requester]):
     colormap = request.args.get("colormap")
     scenarioId = request.args.get("scenarioId")
     year = int(request.args.get("year"))  # type:ignore
-    verify_jwt_in_request(optional=True)
-    data_access = get_jwt().get("data_access", "public")
+    try:
+        verify_jwt_in_request(optional=True)
+        # if no JWT, default to 'osc' access level
+        data_access: str = get_jwt().get("data_access", "osc")
+    except Exception as exc_info:
+        log.warning(f"No JWT for '{request_id}' request", exc_info=exc_info)
+        # 'public' or 'osc'
+        data_access: str = "osc" # type:ignore
+
     image_binary = requester.get_image(
         request_dict={
             "resource": resource,
@@ -105,12 +114,15 @@ def reset(container: Container = Provide[Container]):
 
 @api.after_request
 def refresh_expiring_jwts(response):
+    if request.method == "OPTIONS":
+        return response
     try:
         verify_jwt_in_request(optional=True)
         jwt = get_jwt()
         if "exp" not in jwt:
             return response
         exp_timestamp = jwt["exp"]
+        RuntimeError
         now = datetime.now(timezone.utc)
         target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
         if target_timestamp > exp_timestamp:
@@ -120,7 +132,9 @@ def refresh_expiring_jwts(response):
                 data["access_token"] = access_token
                 response.data = json.dumps(data)
         return response
-    except (RuntimeError, KeyError):
+    except Exception as exc_info:
+        log = current_app.logger
+        log.error(f"Cannot refresh JWT", exc_info=exc_info)
         # Case where there is not a valid JWT. Just return the original response
         return response
 
