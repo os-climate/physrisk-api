@@ -26,6 +26,7 @@ def create_token():
 
 @api.post("/get_hazard_data")
 @api.post("/get_hazard_data_availability")
+@api.post("/get_asset_exposure")
 @api.post("/get_asset_impact")
 @inject
 def hazard_data(requester: Requester = Provide[Container.requester]):
