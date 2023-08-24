@@ -6,6 +6,7 @@ from dependency_injector.wiring import Provide, inject
 from flask import Blueprint, abort, current_app, jsonify, request
 from flask.helpers import make_response
 from flask_jwt_extended import create_access_token, get_jwt, get_jwt_identity, unset_jwt_cookies, verify_jwt_in_request
+from jwt import ExpiredSignatureError
 from physrisk.container import Container
 from physrisk.requests import Requester
 
@@ -43,6 +44,9 @@ def hazard_data(requester: Requester = Provide[Container.requester]):
             verify_jwt_in_request(optional=True)
             # if no JWT, default to 'public' access level
             data_access: str = get_jwt().get("data_access", "osc")
+        except ExpiredSignatureError:
+            log.info("Signature has expired")
+            data_access = "osc"
         except Exception as exc_info:
             log.warning(f"No JWT for '{request_id}' request", exc_info=exc_info)
             # 'public' or 'osc'
@@ -63,12 +67,15 @@ def hazard_data(requester: Requester = Provide[Container.requester]):
     return resp_data
 
 
-@api.get("/images/<path:resource>.png")
+@api.get("/images/<path:resource>.<format>")
+@api.get("/tiles/<path:resource>/<z>/<x>/<y>.<format>")
 @inject
-def get_image(resource, requester: Requester = Provide[Container.requester]):
+def get_image(resource, x=None, y=None, z=None, format="png", requester: Requester = Provide[Container.requester]):
     """Request that physrisk converts an array to image.
-    This is intended for small arrays, say <~ 1500x1500 pixels. Otherwise we use Mapbox to host
-    tilesets (could consider storing tiles directly in S3 in future).
+    In the tiled form of the request will return the requested tile if an array pyramid exists; otherwise an
+    exception is thrown.
+    If tiles are not specified then a whole-aray image is created. This is  intended for small arrays,
+    say <~ 1500x1500 pixels. Otherwise we use tiled form of request or Mapbox to host tilesets.
     """
     log = current_app.logger
     log.info(f"Creating raster image for {resource}.")
@@ -92,7 +99,8 @@ def get_image(resource, requester: Requester = Provide[Container.requester]):
     image_binary = requester.get_image(
         request_dict={
             "resource": resource,
-            "colormap": "heating" if colormap is None else colormap,
+            "tile": None if not x or not y or not z else (int(x), int(y), int(z)),
+            "colormap": colormap,
             "scenarioId": scenarioId,
             "year": year,
             "group_ids": [data_access],
@@ -133,9 +141,13 @@ def refresh_expiring_jwts(response):
                 data["access_token"] = access_token
                 response.data = json.dumps(data)
         return response
+    except ExpiredSignatureError:
+        log = current_app.logger
+        log.info("Signature has expired")
+        return response
     except Exception as exc_info:
         log = current_app.logger
-        log.error("Cannot refresh JWT", exc_info=exc_info)
+        log.warning("Cannot refresh JWT", exc_info=exc_info)
         # Case where there is not a valid JWT. Just return the original response
         return response
 
