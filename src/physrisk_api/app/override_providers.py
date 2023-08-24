@@ -12,7 +12,8 @@ def provide_s3_zarr_store():
     """
     access_key = os.environ.get("OSC_S3_ACCESS_KEY")
     secret_key = os.environ.get("OSC_S3_SECRET_KEY")
-    s3_bucket = "redhat-osc-physical-landing-647521352890"
+    s3_bucket = os.environ.get("OSC_S3_BUCKET")
+
     zarr_path = "hazard/hazard.zarr"
 
     s3 = s3fs.S3FileSystem(anon=False, key=access_key, secret=secret_key)

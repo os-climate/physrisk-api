@@ -26,6 +26,8 @@ def create_app():
     container.wire(modules=[".api"])
     # this is not needed but demonstrates how to override providers in physrisk Container.
     container.override_providers(zarr_store=providers.Singleton(provide_s3_zarr_store))
+    # container.override_providers(config =
+    # providers.Configuration(default={"zarr_sources": ["embedded", "hazard_test"]}))
 
     app.container = container
     _ = JWTManager(app)
