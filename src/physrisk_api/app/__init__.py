@@ -1,3 +1,4 @@
+import logging
 import os
 import pathlib
 from datetime import timedelta
@@ -22,6 +23,9 @@ def create_app():
         load_dotenv(dotenv_path=dotenv_path, override=True)
 
     app = Flask(__name__)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info("Starting physrisk_api...")
+
     container = Container()
     container.wire(modules=[".api"])
     # this is not needed but demonstrates how to override providers in physrisk Container.
