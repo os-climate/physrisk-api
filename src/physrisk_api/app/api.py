@@ -101,7 +101,7 @@ def get_image(resource, x=None, y=None, z=None, format="png", requester: Request
             "resource": resource,
             "tile": None if not x or not y or not z else (int(x), int(y), int(z)),
             "colormap": colormap,
-            "scenarioId": scenarioId,
+            "scenario_id": scenarioId,
             "year": year,
             "group_ids": [data_access],
             "max_value": max_value,
