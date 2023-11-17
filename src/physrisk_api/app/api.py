@@ -90,7 +90,7 @@ def get_image(resource, x=None, y=None, z=None, format="png", requester: Request
     max_value_arg = request.args.get("maxValue")
     max_value = float(max_value_arg) if max_value_arg is not None else None
     colormap = request.args.get("colormap")
-    scenarioId = request.args.get("scenarioId")
+    scenario_id = request.args.get("scenarioId")
     year = int(request.args.get("year"))  # type:ignore
     try:
         verify_jwt_in_request(optional=True)
@@ -106,7 +106,7 @@ def get_image(resource, x=None, y=None, z=None, format="png", requester: Request
             "resource": resource,
             "tile": None if not x or not y or not z else (int(x), int(y), int(z)),
             "colormap": colormap,
-            "scenario_id": scenarioId,
+            "scenario_id": scenario_id,
             "year": year,
             "group_ids": [data_access],
             "max_value": max_value,
