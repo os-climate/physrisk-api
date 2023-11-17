@@ -60,8 +60,12 @@ def hazard_data(requester: Requester = Provide[Container.requester]):
 
     # Response object should hold a list of items, models or measures.
     # If not, none were found matching the request's criteria.
-    if not (resp_data.get("items") or resp_data.get("models") or resp_data.get("asset_impacts")
-            or resp_data.get("risk_measures")):
+    if not (
+        resp_data.get("items")
+        or resp_data.get("models")
+        or resp_data.get("asset_impacts")
+        or resp_data.get("risk_measures")
+    ):
         log.error(f"No results returned for '{request_id}' request")
         abort(404)
 
