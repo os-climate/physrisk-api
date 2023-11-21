@@ -1,3 +1,43 @@
+[project]
+name = "osc-physrisk-api"
+version = "v0.9.9"
+description = "OS-Climate Physical Risk API"
+authors = [
+  { name = "David Besslich", email = "72577720+MichaelTiemannOSC@users.noreply.github.com" },
+]
+requires-python = ">=3.9"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+keywords = ["Climate", "Finance"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: Unix",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Office/Business :: Financial",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Software Development",
+]
+dependencies = [
+  "numpy>= 1.22",
+]
+
+[project.urls]
+Homepage = "https://github.com/os-climate/physrisk-api"
+Repository = "https://github.com/os-climate/physrisk-api"
+Downloads = "https://github.com/os-climate/physrisk-api/releases"
+"Bug Tracker" = "https://github.com/os-climate/physrisk-api/issues"
+Documentation = "https://github.com/os-climate/physrisk-api/tree/main/docs"
+"Source Code" = "https://github.com/os-climate/physrisk-api"
+
 [build-system]
 requires = [
     "setuptools>=42",
@@ -38,6 +78,7 @@ force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 120
+profile = "black"
 
 [tool.coverage.run]
 omit = ["src/test/*"]
