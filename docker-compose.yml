@@ -1,3 +1,4 @@
+---
 version: '2'
 
 services:
@@ -12,6 +13,6 @@ services:
     build: ./nginx
     container_name: nginx
     ports:
-      - "8443:8443"
+      - '8443:8443'
     depends_on:
       - web

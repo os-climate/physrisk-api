@@ -6,6 +6,8 @@ ci:
     - tomllint
     # pre-commit.ci throws some error related to Docker!
     - shellcheck
+    # Redundant with pre-commit.ci
+    - pip-audit
 
 exclude: |
   (?x)^(
