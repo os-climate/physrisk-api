@@ -2,12 +2,12 @@
 # Workflow to build Docker image
 # Based on openshift.yml (excluding OpenShift deployment)
 
-name: 'Run tests, build and push image'
+name: "Run tests, build and push image"
 
 env:
-  APP_NAME: 'physrisk-api'
-  IMAGE_REGISTRY: 'quay.io/os-climate'
-  IMAGE_TAGS: ''
+  APP_NAME: "physrisk-api"
+  IMAGE_REGISTRY: "quay.io/os-climate"
+  IMAGE_TAGS: ""
 
 # yamllint disable-line rule:truthy
 on:
@@ -18,11 +18,11 @@ on:
 
 jobs:
   build:
-    name: 'Build and push to Quay'
+    name: "Build and push to Quay"
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Check for required secrets'
+      - name: "Check for required secrets"
         uses: actions/github-script@v4
         with:
           script: |
@@ -51,22 +51,22 @@ jobs:
               core.info(`✅ All the required secrets are set`);
             }
 
-      - name: 'Check out repository'
+      - name: "Check out repository"
         uses: actions/checkout@v2
 
-      - name: 'Determine app name'
+      - name: "Determine app name"
         if: env.APP_NAME == ''
         run: |
           APP_NAME=$(basename "${PWD}")
           echo "${APP_NAME}" | tee -a "${GITHUB_ENV}"
 
-      - name: 'Determine image tags'
+      - name: "Determine image tags"
         if: env.IMAGE_TAGS == ''
         run: |
           echo "IMAGE_TAGS=latest ${GITHUB_SHA::12}" | tee -a "${GITHUB_ENV}"
 
       # https://github.com/redhat-actions/buildah-build#readme
-      - name: 'Build from Dockerfile'
+      - name: "Build from Dockerfile"
         id: build-image
         uses: redhat-actions/buildah-build@v2
         with:
@@ -80,7 +80,7 @@ jobs:
             ./Dockerfile
 
       # https://github.com/redhat-actions/push-to-registry#readme
-      - name: 'Push to registry'
+      - name: "Push to registry"
         id: push-image
         uses: redhat-actions/push-to-registry@v2
         with:
