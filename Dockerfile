@@ -11,8 +11,8 @@ WORKDIR /usr/local/src/app
 RUN \
     # Install shadow-utils for adduser functionality
     microdnf -y install shadow-utils \
-    # Install Python 3.8
-    && microdnf -y install python38 \
+    # Install Python 3.9
+    && microdnf -y install python39 \
     # Install application
     && pip3 install . \
     # Clean up unnecessary data
