@@ -72,3 +72,31 @@ One may then make requests of <https://0.0.0.0:8080>.
 
 Currently, this service is released automatically to quay.io and manually
 deployed onto OpenShift.
+
+## Debugging Flask (without Docker)
+
+The Flask app itself can be run via:
+
+```
+cd src/physrisk_api
+flask run
+```
+
+For VS Code users, the launch.json configuration suitable for debugging is:
+
+```json
+{
+  "name": "Python: Flask",
+  "type": "python",
+  "request": "launch",
+  "module": "flask",
+  "env": {
+    "FLASK_APP": "src/physrisk_api/app.py",
+    "FLASK_ENV": "development",
+    "FLASK_DEBUG": "1"
+  },
+  "args": ["run", "--no-debugger", "--no-reload"],
+  "jinja": true,
+  "justMyCode": false
+}
+```
