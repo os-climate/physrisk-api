@@ -1,9 +1,9 @@
 [project]
-name = "osc-physrisk-api"
-version = "v0.9.9"
+name = "physrisk-api"
+version = "v0.10.0"
 description = "OS-Climate Physical Risk API"
 authors = [
-  { name = "David Besslich", email = "72577720+MichaelTiemannOSC@users.noreply.github.com" },
+  { name = "Joe Moorhouse", email = "5102656+joemoorhouse@users.noreply.github.com" },
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -27,7 +27,11 @@ classifiers = [
   "Topic :: Software Development",
 ]
 dependencies = [
-  "numpy>= 1.22",
+  "waitress",
+  "Flask",
+  "flask-cors",
+  "flask-jwt-extended",
+  "physrisk-lib>=0.20.0"
 ]
 
 [project.urls]
