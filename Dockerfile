@@ -12,7 +12,7 @@ RUN \
     # Install shadow-utils for adduser functionality
     microdnf -y install shadow-utils \
     # Install Python 3.9
-    && microdnf -y install python39 \
+    && microdnf -y install python38 \
     # Install application
     && pip3 install . \
     # Clean up unnecessary data
