@@ -7,7 +7,7 @@ name = "pypi"
 waitress = "*"
 Flask = "*"
 flask-cors = "*"
-physrisk-lib = "==0.28.0"
+physrisk-lib = "==0.29.0"
 flask-jwt-extended = "*"
 
 [dev-packages]
