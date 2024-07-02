@@ -32,7 +32,7 @@ dependencies = [
   "Flask",
   "flask-cors",
   "flask-jwt-extended",
-  "physrisk-lib>=0.20.0"
+  "physrisk-lib>=0.37.0"
 ]
 
 [project.urls]
