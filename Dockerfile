@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+FROM registry.access.redhat.com/ubi9/ubi-minimal
 
 # Create working directory
 RUN mkdir -p /usr/local/src/app
@@ -12,9 +12,9 @@ RUN \
     # Install shadow-utils for adduser functionality
     microdnf -y install shadow-utils \
     # Install Python 3.9
-    && microdnf -y install python38 \
+    && microdnf -y install python39 pip \
     # Install application
-    && pip3 install . \
+    && pip install . \
     # Clean up unnecessary data
     && microdnf clean all && rm -rf /var/cache/yum
 
