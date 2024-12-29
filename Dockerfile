@@ -27,5 +27,8 @@ USER physrisk-api
 # Enable communication via port 8081
 EXPOSE 8081
 
+# Add venv into PATH
+ENV PATH="/usr/local/src/app/.venv/bin:$PATH"
+
 # Run FastAPI application
 CMD ["fastapi", "run", "src/physrisk_api/app/main.py", "--port", "8081", "--workers", "1"]
