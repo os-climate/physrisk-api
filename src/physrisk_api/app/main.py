@@ -86,13 +86,13 @@ def get_asset_impact(
 def get_image(
     resource: str,
     format: Annotated[str, Path(description="Image format", examples=["PNG"])],
-    scenarioId: str,
+    scenarioId: str,  # noqa: N803
     year: int,
     requester: Annotated[Requester, Depends(requester)],
-    minValue: Annotated[
+    minValue: Annotated[  # noqa: N803
         Optional[float], Query(description="Minimum value", examples=[0])
     ] = None,
-    maxValue: Annotated[
+    maxValue: Annotated[  # noqa: N803
         Optional[float], Query(description="Maximum value", examples=[3])
     ] = None,
     colormap: Annotated[
@@ -128,12 +128,12 @@ def get_tile(
     y: int,
     z: int,
     requester: Annotated[Requester, Depends(requester)],
-    scenarioId: str,
+    scenarioId: str,  # noqa: N803
     year: int,
-    minValue: Annotated[
+    minValue: Annotated[  # noqa: N803
         Optional[float], Query(description="Minimum value", examples=[0])
     ] = None,
-    maxValue: Annotated[
+    maxValue: Annotated[  # noqa: N803
         Optional[float], Query(description="Maximum value", examples=[3])
     ] = None,
     colormap: Annotated[
