@@ -3,7 +3,6 @@ import logging.config
 from typing import Annotated, Optional
 from fastapi import Depends, FastAPI, Path, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
-import numpy as np
 from physrisk.api.v1.exposure_req_resp import (
     AssetExposureRequest,
     AssetExposureResponse,
@@ -36,6 +35,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 async def requester():
     # We mainly use FastAPI's own dependency injection via Depends, but dependencies can have access to
@@ -84,49 +84,61 @@ def get_asset_impact(
 
 @app.get("/api/images/{resource:path}.{format}")
 def get_image(
-     resource: str,
-     format: Annotated[str, Path(description="Image format", examples=["PNG"])],
-     scenarioId: str,
-     year: int,
-     requester: Annotated[Requester, Depends(requester)],
-     minValue: Annotated[Optional[float], Query(description="Minimum value", examples=[0])] = None,
-     maxValue: Annotated[Optional[float], Query(description="Maximum value", examples=[3])] = None,
-     colormap: Annotated[Optional[str], Query(description="Maximum value", examples=["flare"])] = None
+    resource: str,
+    format: Annotated[str, Path(description="Image format", examples=["PNG"])],
+    scenarioId: str,
+    year: int,
+    requester: Annotated[Requester, Depends(requester)],
+    minValue: Annotated[
+        Optional[float], Query(description="Minimum value", examples=[0])
+    ] = None,
+    maxValue: Annotated[
+        Optional[float], Query(description="Maximum value", examples=[3])
+    ] = None,
+    colormap: Annotated[
+        Optional[str], Query(description="Maximum value", examples=["flare"])
+    ] = None,
 ):
-     """Request that physrisk converts an array to image.
-     A whole-aray image is created. This is  intended for small arrays, say <~ 1500x1500 pixels.
-     Otherwise use tiled form of request.
-     """
-     logger.info(f"Creating whole-array image for {resource}.")
-     image_binary = requester.get_image(
-          HazardImageRequest(
-               resource=resource,
-               tile=None,
-               colormap=colormap,
-               format=format,
-               scenario_id=scenarioId,
-               year=year,
-               group_ids=["osc"],
-               max_value=maxValue,
-               min_value=minValue,
-          )
-     )
-     return Response(content=image_binary, media_type="image/png")
+    """Request that physrisk converts an array to image.
+    A whole-aray image is created. This is  intended for small arrays, say <~ 1500x1500 pixels.
+    Otherwise use tiled form of request.
+    """
+    logger.info(f"Creating whole-array image for {resource}.")
+    image_binary = requester.get_image(
+        HazardImageRequest(
+            resource=resource,
+            tile=None,
+            colormap=colormap,
+            format=format,
+            scenario_id=scenarioId,
+            year=year,
+            group_ids=["osc"],
+            max_value=maxValue,
+            min_value=minValue,
+        )
+    )
+    return Response(content=image_binary, media_type="image/png")
 
 
 @app.get("/api/tiles/{resource:path}/{z}/{x}/{y}.{format}")
 def get_tile(
-     resource: str,
-     format: Annotated[str, Path(description="Image format", examples=["PNG"])],
-     x: int,
-     y: int,
-     z: int,
-     requester: Annotated[Requester, Depends(requester)],
-     scenarioId: str,
-     year: int,
-     minValue: Annotated[Optional[float], Query(description="Minimum value", examples=[0])] = None,
-     maxValue: Annotated[Optional[float], Query(description="Maximum value", examples=[3])] = None,
-     colormap: Annotated[Optional[str], Query(description="Maximum value", examples=["flare"])] = None
+    resource: str,
+    format: Annotated[str, Path(description="Image format", examples=["PNG"])],
+    x: int,
+    y: int,
+    z: int,
+    requester: Annotated[Requester, Depends(requester)],
+    scenarioId: str,
+    year: int,
+    minValue: Annotated[
+        Optional[float], Query(description="Minimum value", examples=[0])
+    ] = None,
+    maxValue: Annotated[
+        Optional[float], Query(description="Maximum value", examples=[3])
+    ] = None,
+    colormap: Annotated[
+        Optional[str], Query(description="Maximum value", examples=["flare"])
+    ] = None,
 ):
     """Request that physrisk converts an array to image.
     The request will return the requested tile if an array pyramid exists; otherwise an
@@ -135,15 +147,15 @@ def get_tile(
     logger.info(f"Creating raster image for {resource}.")
     image_binary = requester.get_image(
         HazardImageRequest(
-          resource=resource,
-          tile=Tile(x, y, z),
-          colormap=colormap,
-          format=format,
-          scenario_id=scenarioId,
-          year=year,
-          group_ids=["osc"],
-          max_value=maxValue,
-          min_value=minValue,
+            resource=resource,
+            tile=Tile(x, y, z),
+            colormap=colormap,
+            format=format,
+            scenario_id=scenarioId,
+            year=year,
+            group_ids=["osc"],
+            max_value=maxValue,
+            min_value=minValue,
         )
     )
     return Response(content=image_binary, media_type="image/png")

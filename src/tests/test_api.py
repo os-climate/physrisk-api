@@ -1,8 +1,8 @@
 from unittest import mock
 from fastapi.testclient import TestClient
 from physrisk.api.v1.hazard_data import (
-    #HazardAvailabilityRequest,
-    #HazardDataRequest,
+    # HazardAvailabilityRequest,
+    # HazardDataRequest,
     ##HazardAvailabilityResponse,
     HazardDataResponse,
 )
@@ -32,18 +32,18 @@ def hazard_data_request():
     """A minimal get_hazard_data request for testing purposes."""
 
     return {
-            "items": [
-                {
-                    "request_item_id": "afac2a5d-9961-...",
-                    "hazard_type": "RiverineInundation",
-                    "indicator_id": "flood_depth",
-                    "longitudes": [20.24506],
-                    "latitudes": [45.48358],
-                    "year": 1985,
-                    "scenario": "historical",
-                    "path": "inundation/river_tudelft/v2/flood_depth_unprot_{scenario}_{year}",
-                }
-            ],
+        "items": [
+            {
+                "request_item_id": "afac2a5d-9961-...",
+                "hazard_type": "RiverineInundation",
+                "indicator_id": "flood_depth",
+                "longitudes": [20.24506],
+                "latitudes": [45.48358],
+                "year": 1985,
+                "scenario": "historical",
+                "path": "inundation/river_tudelft/v2/flood_depth_unprot_{scenario}_{year}",
+            }
+        ],
     }
 
 
@@ -77,12 +77,14 @@ def test_get_hazard_data_typical():
     response = HazardDataResponse(**expected)
     # we do not need to test external libraries here, so mock physrisk
     # with realistic response to avoid looking up real data.
-    with mock.patch.object(Requester, 'get_hazard_data', return_value=response):
+    with mock.patch.object(Requester, "get_hazard_data", return_value=response):
         resp = client.post("/api/get_hazard_data", json=hazard_data_request())
 
     assert resp.status_code == 200
-    assert (resp.json()["items"][0]["intensity_curve_set"][0]["intensities"] == 
-            expected["items"][0]["intensity_curve_set"][0]["intensities"])
+    assert (
+        resp.json()["items"][0]["intensity_curve_set"][0]["intensities"]
+        == expected["items"][0]["intensity_curve_set"][0]["intensities"]
+    )
 
 
 # def test_hazard_data_invalid_request(caplog):
