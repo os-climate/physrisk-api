@@ -168,4 +168,5 @@ def reset():
 
 
 if __name__ == "__main__":
+    # this is so that one can debug via, e.g. Python Debugger: Current File on main.py
     uvicorn.run(app, host="0.0.0.0", port=8000)
