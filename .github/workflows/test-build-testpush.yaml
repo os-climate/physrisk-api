@@ -15,7 +15,7 @@ env:
 
 # yamllint disable-line rule:truthy
 on:
-  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows  
+  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows
   pull_request_target:
     types: [labeled]
 
@@ -60,6 +60,9 @@ jobs:
 
       - name: "Check out repository"
         uses: actions/checkout@v2
+          with:
+            ref: ${{github.event.pull_request.head.ref}}
+            repository: ${{github.event.pull_request.head.repo.full_name}}
 
       - name: "Determine app name"
         if: env.APP_NAME == ''
