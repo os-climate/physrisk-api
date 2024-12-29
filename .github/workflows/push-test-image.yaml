@@ -2,7 +2,7 @@
     # Workflow to build Docker image
     # Based on openshift.yml (excluding OpenShift deployment)
     
-    name: "Run tests, build and push image"
+    name: "Run tests, build and push a test image"
     
     env:
       APP_NAME: "physrisk-api-test"
