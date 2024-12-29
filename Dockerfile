@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+FROM registry.access.redhat.com/ubi9/ubi-minimal
 
 # Create working directory
 RUN mkdir -p /usr/local/src/app
@@ -12,9 +12,11 @@ RUN \
     # Install shadow-utils for adduser functionality
     microdnf -y install shadow-utils \
     # Install Python 3.9
-    && microdnf -y install python38 \
+    && microdnf -y install python39 pip \
+    # Install pdm
+    && pip install -U pdm \
     # Install application
-    && pip3 install . \
+    && pdm install --check --prod --no-editable \
     # Clean up unnecessary data
     && microdnf clean all && rm -rf /var/cache/yum
 
@@ -26,4 +28,4 @@ USER physrisk-api
 EXPOSE 8081
 
 # Run application
-CMD ["waitress-serve", "--port=8081", "--call", "src.physrisk_api.app:create_app"]
+CMD ["fastapi", "run", "src/physrisk_api/app/main.py", "--port", "8081", "--workers", "1"]

@@ -1,7 +1,21 @@
 import os
 from pathlib import PurePosixPath
+import pathlib
 
+from dependency_injector import providers
+from dotenv import load_dotenv
 import s3fs
+from physrisk.container import Container
+
+
+def create_container():
+    dotenv_dir = os.environ.get("CREDENTIAL_DOTENV_DIR", os.getcwd())
+    dotenv_path = pathlib.Path(dotenv_dir) / "credentials.env"
+    if os.path.exists(dotenv_path):
+        load_dotenv(dotenv_path=dotenv_path, override=True)
+    container = Container()
+    container.override_providers(zarr_store=providers.Singleton(provide_s3_zarr_store))
+    return container
 
 
 def provide_s3_zarr_store():
