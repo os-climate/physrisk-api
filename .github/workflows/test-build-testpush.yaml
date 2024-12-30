@@ -19,7 +19,6 @@ on:
   pull_request_target:
     types: [labeled]
 
-
 # yamllint disable rule:line-length
 
 jobs:
