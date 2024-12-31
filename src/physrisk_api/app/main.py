@@ -1,7 +1,7 @@
 import logging
 import logging.config
 from typing import Annotated, Optional
-from fastapi import Depends, FastAPI, Path, Query, Response
+from fastapi import Depends, FastAPI, HTTPException, Path, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from physrisk.api.v1.exposure_req_resp import (
     AssetExposureRequest,
@@ -53,7 +53,15 @@ async def root():
 def get_hazard_data(
     request: HazardDataRequest, requester: Annotated[Requester, Depends(requester)]
 ) -> HazardDataResponse:
-    response = requester.get_hazard_data(request)
+    try:
+        response = requester.get_hazard_data(request)
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(status_code=400, detail="Invalid 'get_hazard_data' request")
+    if len(response.items) == 0:
+        detail = "No results returned for 'get_hazard_data' request"
+        logger.error(detail)
+        raise HTTPException(status_code=404, detail=detail)
     return response
 
 
@@ -78,7 +86,13 @@ def get_asset_exposure(
 def get_asset_impact(
     request: AssetImpactRequest, requester: Annotated[Requester, Depends(requester)]
 ) -> AssetImpactResponse:
-    response = requester.get_asset_impacts(request)
+    try:
+        response = requester.get_asset_impacts(request)
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(
+            status_code=400, detail="Invalid 'get_asset_impact' request"
+        )
     return response
 
 

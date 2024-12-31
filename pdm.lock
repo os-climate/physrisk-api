@@ -5,7 +5,7 @@
 groups = ["default", "dev", "test"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:070ee070d1304b513b98a9d0f5f072144f26fa04dd1e82a0acacd53d9fc66c95"
+content_hash = "sha256:fa976b107b804c06c4df393f734df053e73c1bbb3c5904b778076e5bc696c13d"
 
 [[metadata.targets]]
 requires_python = ">=3.9,<3.11"
@@ -1310,7 +1310,7 @@ files = [
 
 [[package]]
 name = "physrisk-lib"
-version = "0.43.0"
+version = "0.44.0"
 requires_python = "<3.11,>=3.9"
 summary = "OS-Climate Physical Risk Library"
 groups = ["default"]
@@ -1334,8 +1334,8 @@ dependencies = [
     "zarr>=2.10.3",
 ]
 files = [
-    {file = "physrisk_lib-0.43.0-py3-none-any.whl", hash = "sha256:bf6cce7d29b02b934d5a4e33ecf5f8f40a5c0ff1f2e0b1a57f732a0a73989eab"},
-    {file = "physrisk_lib-0.43.0.tar.gz", hash = "sha256:bc11cc132ab0cd094c8d891fee0be323387544d8aa624d14b3d11ba88f0173d5"},
+    {file = "physrisk_lib-0.44.0-py3-none-any.whl", hash = "sha256:a53a80598d95e3adce3f5a2791a80b056ca29fdd5e7c85b97641d274dee6a86b"},
+    {file = "physrisk_lib-0.44.0.tar.gz", hash = "sha256:3655c63fc0b3d4302ce5a9de0a101a02f41f739414607f928bcebfe47644ef89"},
 ]
 
 [[package]]
