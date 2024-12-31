@@ -1,8 +1,10 @@
+import os
 from flask import Blueprint
 
 from .api import api
 
-main = Blueprint("main", __name__, url_prefix="/")
+
+main = Blueprint("main", __name__, url_prefix=os.getenv("PHYSRISK_API_URL_PREFIX", "/"))
 
 # Register all routes or blueprints with the 'main' blueprint.
 main.register_blueprint(api)
