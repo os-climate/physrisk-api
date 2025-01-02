@@ -11,7 +11,8 @@ API service for the OS-Climate physical risk tool
 
 ![Build Status](https://github.com/os-climate/physrisk-api/actions/workflows/ci.yml/badge.svg?branch=main)
 
-- [Source](https://github.com/os-climate/physrisk-api)
+- [Source](https://github.com/os-climate/physrisk-api)  
+- [Contributing](https://github.com/os-climate/physrisk-api/blob/main/CONTRIBUTING.md)
 
 ## License
 

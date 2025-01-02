@@ -1,102 +1,95 @@
-# Contributing to phsyrisk-api
+# Contributing to physrisk-api
 
 ## Getting started
-
 To get set up, clone and enter the repo.
+```
+git clone https://github.com/os-climate/physrisk-api.git
+cd physrisk-api
+```
 
-    git clone git@github.com:os-climate/physrisk-api.git
-    cd physrisk-api
+We recommend using [pdm](https://pdm-project.org/latest/) for a
+consistent working environment. Install via, e.g.:
+```
+pip install pdm
+```
+For ease of using Jupyter notebooks (e.g. in VS Code) the config can be used:
+```
+pdm config venv.with_pip True
+```
 
-We recommend using [pipenv](https://pipenv.pypa.io/en/latest/) for a
-consistent working environment.
-
-    pip install pipenv
-    pipenv install
-    pipenv shell
+The command:
+```
+pdm install
+```
+will create a virtual environment (typically .venv folder in the project folder) and install the dependencies.
+We recommend that the IDE workspace uses this virtual environment when developing.
 
 When adding a package for use in new or improved functionality,
-`pipenv install <package-name>`. Or, when adding something helpful for
-testing or development, `pipenv install -d <package-name>`.
+`pdm add <package-name>`. Or, when adding something helpful for
+testing or development, `pdm add -dG <group> <package-name>`.
 
 ## Development
-
 Patches may be contributed via pull requests to
-<https://github.com/os-climate/physrisk-api>.
+https://github.com/os-climate/physrisk-api.
 
 All changes must pass the automated test suite, along with various static
 checks.
 
-[Black](https://black.readthedocs.io/) code style and
-[isort](https://pycqa.github.io/isort/) import ordering are enforced
-and enabling automatic formatting via [pre-commit](https://pre-commit.com/)
-is recommended:
+Enabling automatic formatting via [pre-commit](https://pre-commit.com/)
+is also recommended:
+```
+pre-commit install
+```
+or
+```
+pre-commit run --all-files
+```
 
-    pre-commit install
+To ensure compliance with automated checks, developers may wish to run formatting and test steps which can be done via:
+```
+pdm run lint
+pdm run test
+```
 
-This will ensure changes meet common best practice.
+## IDE set-up
+For those using VS Code, configure tests ('Python: Configure Tests') to use 'pytest'
+to allow running of tests within the IDE.
 
-E.g.,
 
-    # auto-sort imports
-    isort .
-    # auto-format code
-    black .
+## Forking workflow
+This is a useful clarification of the forking workflow:  
+https://gist.github.com/Chaser324/ce0505fbed06b947d962  
+https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow
 
-Code can then be tested using tox.
 
-### run static checks and unit tests
+## Running API in a Container
+An image can be built and run via:
+```
+docker build . -t physrisk-api-image
+docker run -d --name physrisk-api -p 8081:8081 physrisk-api-image
+```
+The API should then be accessible via:  
+http://localhost:8081  
+and docs via:  
+http://localhost:8081/docs
 
-    tox
 
-### run only tests
-
-    tox -e py3
-
-### run only static checks
-
-    tox -e static
-
-### run unit tests and produce an HTML code coverage report (/htmlcov)
-
-    tox -e cov
-
-To run the application locally, run either of the following commands;
+An example is also given of using Docker Compose to use nginx as a reverse proxy. To run the application locally, run either of the following commands;
 
     docker-compose up
     # or
     podman-compose up
 
-One may then make requests of <https://0.0.0.0:8080>.
+This is just an example and details of how the image are used in an Application are mostly beyond the scope of this repo. There is a useful introduction here:
+https://fastapi.tiangolo.com/deployment/docker/.
+The example 'physrisk' project is hosted on the [OpenShift](https://www.redhat.com/en/technologies/cloud-computing/openshift) Container platform. This is the 'One Load Balancer - Multiple Worker Containers' case where replication is done at the cluster level, which explains why the Dockerfile configures a single worker process.  
+https://physrisk-ui-physrisk.apps.odh-cl2.apps.os-climate.org/  
+https://physrisk-api-physrisk.apps.odh-cl2.apps.os-climate.org/docs
+
 
 ## Releasing
+Currently, this image is built and released automatically to quay.io and manually (/automatically for a test instance) deployed onto OpenShift.
 
-Currently, this service is released automatically to quay.io and manually
-deployed onto OpenShift.
 
-## Debugging Flask (without Docker)
-
-The Flask app itself can be run via:
-
-```
-cd src/physrisk_api
-flask run
-```
-
-For VS Code users, the launch.json configuration suitable for debugging is:
-
-```json
-{
-  "name": "Python: Flask",
-  "type": "python",
-  "request": "launch",
-  "module": "flask",
-  "env": {
-    "FLASK_APP": "src/physrisk_api/app.py",
-    "FLASK_ENV": "development",
-    "FLASK_DEBUG": "1"
-  },
-  "args": ["run", "--no-debugger", "--no-reload"],
-  "jinja": true,
-  "justMyCode": false
-}
-```
+## Debugging (without Docker)
+We recommend the approach of https://fastapi.tiangolo.com/tutorial/debugging/. That is, the ```"Python Debugger: Current File"``` option can be selected, running file ```.\src\physrisk_api\app\main.py```.
