@@ -28,7 +28,7 @@ def provide_s3_zarr_store():
     secret_key = os.environ.get("OSC_S3_SECRET_KEY", "")
     s3_bucket = os.environ.get("OSC_S3_BUCKET", "os-climate-physical-risk")
     zarr_path = os.environ.get("OSC_S3_HAZARD_PATH", "hazard-indicators/hazard.zarr")
-    
+
     s3 = (
         s3fs.S3FileSystem(anon=True)
         if access_key == ""
