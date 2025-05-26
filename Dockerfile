@@ -22,7 +22,7 @@ RUN  \
 
 RUN  \
     # Clean up unnecessary data
-    && microdnf clean all && rm -rf /var/cache/yum
+    microdnf clean all && rm -rf /var/cache/yum
 
 # Run as non-root user
 RUN adduser physrisk-api
