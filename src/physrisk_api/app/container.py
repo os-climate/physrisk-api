@@ -24,13 +24,16 @@ def provide_s3_zarr_store():
     Returns:
         MutableMapping: Zarr store.
     """
-    access_key = os.environ.get("OSC_S3_ACCESS_KEY")
-    secret_key = os.environ.get("OSC_S3_SECRET_KEY")
-    s3_bucket = os.environ.get("OSC_S3_BUCKET")
-
-    zarr_path = "hazard/hazard.zarr"
-
-    s3 = s3fs.S3FileSystem(anon=False, key=access_key, secret=secret_key)
+    access_key = os.environ.get("OSC_S3_ACCESS_KEY", "")
+    secret_key = os.environ.get("OSC_S3_SECRET_KEY", "")
+    s3_bucket = os.environ.get("OSC_S3_BUCKET", "os-climate-physical-risk")
+    zarr_path = os.environ.get("OSC_S3_HAZARD_PATH", "hazard-indicators/hazard.zarr")
+    
+    s3 = (
+        s3fs.S3FileSystem(anon=True)
+        if access_key == ""
+        else s3fs.S3FileSystem(anon=False, key=access_key, secret=secret_key)
+    )
 
     store = s3fs.S3Map(
         root=str(PurePosixPath(s3_bucket, zarr_path)),
