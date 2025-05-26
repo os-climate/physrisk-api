@@ -14,9 +14,13 @@ RUN \
     # Install Python 3.9
     && microdnf -y install python39 pip \
     # Install pdm
-    && pip install -U pdm \
+    && pip install -U pdm
+    
+RUN  \
     # Install application
-    && pdm install --check --prod --no-editable \
+    pdm install --check --prod --no-editable
+
+RUN  \
     # Clean up unnecessary data
     && microdnf clean all && rm -rf /var/cache/yum
 
