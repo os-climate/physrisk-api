@@ -5,7 +5,7 @@ description = "OS-Climate Physical Risk API"
 authors = [
   { name = "Joe Moorhouse", email = "5102656+joemoorhouse@users.noreply.github.com" },
 ]
-requires-python = ">=3.9,<3.11"
+requires-python = ">=3.9"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 keywords = ["Climate", "Finance"]
@@ -22,14 +22,13 @@ classifiers = [
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.8",
   "Topic :: Office/Business :: Financial",
   "Topic :: Scientific/Engineering",
   "Topic :: Software Development",
 ]
 dependencies = [
   "fastapi[standard]",
-  "physrisk-lib>=1.0.3"
+  "physrisk-lib>=1.1.0"
 ]
 
 [project.urls]
