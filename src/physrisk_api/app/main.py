@@ -13,7 +13,7 @@ from physrisk.api.v1.hazard_data import (
     HazardDataRequest,
     HazardDataResponse,
 )
-from physrisk.api.v1.hazard_image import HazardImageRequest, Tile
+from physrisk.api.v1.hazard_image import HazardImageRequest, Tile, HazardImageInfoRequest, HazardImageInfoResponse
 from physrisk.api.v1.impact_req_resp import AssetImpactRequest, AssetImpactResponse
 from physrisk.requests import Requester
 import uvicorn
@@ -132,6 +132,20 @@ def get_image(
         )
     )
     return Response(content=image_binary, media_type="image/png")
+
+
+@app.post("/api/get_image_info")
+def get_image_info(
+    request: HazardImageInfoRequest, requester: Annotated[Requester, Depends(requester)]
+) -> HazardImageInfoResponse:
+    try:
+        response = requester.get_image_info(request)
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(
+            status_code=400, detail="Invalid 'get_image_info' request"
+        )
+    return response
 
 
 @app.get("/api/tiles/{resource:path}/{z}/{x}/{y}.{format}")
