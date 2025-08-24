@@ -1,6 +1,6 @@
 import logging
 import logging.config
-from typing import Annotated, Optional
+from typing import Annotated, Any, Optional
 from fastapi import Depends, FastAPI, HTTPException, Path, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from physrisk.api.v1.exposure_req_resp import (
@@ -167,6 +167,9 @@ def get_tile(
     colormap: Annotated[
         Optional[str], Query(description="Maximum value", examples=["flare"])
     ] = None,
+    index: Annotated[
+        Optional[Any], Query(description="Index (non-spatial dimension) value", examples=[0])
+    ] = None,
 ):
     """Request that physrisk converts an array to image.
     The request will return the requested tile if an array pyramid exists; otherwise an
@@ -184,6 +187,7 @@ def get_tile(
             group_ids=["osc"],
             max_value=maxValue,
             min_value=minValue,
+            index=index
         )
     )
     return Response(content=image_binary, media_type="image/png")

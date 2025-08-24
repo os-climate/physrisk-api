@@ -2,53 +2,54 @@
 
 ## Getting started
 To get set up, clone and enter the repo.
-```
+```bash
 git clone https://github.com/os-climate/physrisk-api.git
 cd physrisk-api
 ```
 
-We recommend using [pdm](https://pdm-project.org/latest/) for a
-consistent working environment. Install via, e.g.:
-```
-pip install pdm
-```
-For ease of using Jupyter notebooks (e.g. in VS Code) the config can be used:
-```
-pdm config venv.with_pip True
+We recommend using [uv](https://docs.astral.sh/uv/) for maintaining a consistent working environment.
+There are a number of [installation options](https://docs.astral.sh/uv/getting-started/installation/).
+Note that an advantage of uv is that it can also be used to maintain python installations
+(via ```uv python install```) and select the Python installation be be used for the creation of the
+project's virtual environment, e.g. ```uv python pin 3.11```.
+
+The command
+
+```bash
+uv sync
 ```
 
-The command:
-```
-pdm install
-```
-will create a virtual environment (typically .venv folder in the project folder) and install the dependencies.
-We recommend that the IDE workspace uses this virtual environment when developing.
+will create a virtual environment (.venv folder in the project
+folder) and install the dependencies.
+We recommend that the IDE workspace use this virtual environment when
+developing.
 
 When adding a package for use in new or improved functionality,
-`pdm add <package-name>`. Or, when adding something helpful for
-testing or development, `pdm add -dG <group> <package-name>`.
+`uv add <package-name>`. Or, when adding something for
+development, `uv add --dev <package-name>`.
 
 ## Development
+
 Patches may be contributed via pull requests to
-https://github.com/os-climate/physrisk-api.
+<https://github.com/os-climate/physrisk-api>.
 
 All changes must pass the automated test suite, along with various static
-checks.
+checks. Tests and static checks can be run via the commands:
+
+```bash
+uv run pytest
+```
+
+```bash
+uv run pre-commit run --all-files
+```
+
+Other checks are then run with Actions within GitHub.
 
 Enabling automatic formatting via [pre-commit](https://pre-commit.com/)
 is also recommended:
 ```
 pre-commit install
-```
-or
-```
-pre-commit run --all-files
-```
-
-To ensure compliance with automated checks, developers may wish to run formatting and test steps which can be done via:
-```
-pdm run lint
-pdm run test
 ```
 
 ## IDE set-up
@@ -93,3 +94,9 @@ Currently, this image is built and released automatically to quay.io and manuall
 
 ## Debugging (without Docker)
 We recommend the approach of https://fastapi.tiangolo.com/tutorial/debugging/. That is, the ```"Python Debugger: Current File"``` option can be selected, running file ```.\src\physrisk_api\app\main.py```.
+
+It may be desirable to debug or otherwise develop physrisk-api using a local, modified version of physrisk. In this case, the command ```uv pip install``` is useful. physrisk-api can use a cloned version of physrisk API (here in location "/Users/username/Code/physrisk") via:
+
+```
+uv pip install -e "/Users/username/Code/physrisk"
+```
