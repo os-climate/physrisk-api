@@ -13,7 +13,13 @@ from physrisk.api.v1.hazard_data import (
     HazardDataRequest,
     HazardDataResponse,
 )
-from physrisk.api.v1.hazard_image import HazardImageRequest, Tile, HazardImageInfoRequest, HazardImageInfoResponse
+from physrisk.api.v1.hazard_image import (
+    HazardImageRequest,
+    Tile,
+    TileNotAvailableError,
+    HazardImageInfoRequest,
+    HazardImageInfoResponse,
+)
 from physrisk.api.v1.impact_req_resp import AssetImpactRequest, AssetImpactResponse
 from physrisk.requests import Requester
 import uvicorn
@@ -142,9 +148,7 @@ def get_image_info(
         response = requester.get_image_info(request)
     except Exception as e:
         logger.exception(e)
-        raise HTTPException(
-            status_code=400, detail="Invalid 'get_image_info' request"
-        )
+        raise HTTPException(status_code=400, detail="Invalid 'get_image_info' request")
     return response
 
 
@@ -167,8 +171,9 @@ def get_tile(
     colormap: Annotated[
         Optional[str], Query(description="Maximum value", examples=["flare"])
     ] = None,
-    index: Annotated[
-        Optional[Any], Query(description="Index (non-spatial dimension) value", examples=[0])
+    indexValue: Annotated[  # noqa: N803
+        Optional[Any],
+        Query(description="Index (non-spatial dimension) value", examples=[0]),
     ] = None,
 ):
     """Request that physrisk converts an array to image.
@@ -176,21 +181,28 @@ def get_tile(
     exception is thrown.
     """
     logger.info(f"Creating raster image for {resource}.")
-    image_binary = requester.get_image(
-        HazardImageRequest(
-            resource=resource,
-            tile=Tile(x, y, z),
-            colormap=colormap,
-            format=format,
-            scenario_id=scenarioId,
-            year=year,
-            group_ids=["osc"],
-            max_value=maxValue,
-            min_value=minValue,
-            index=index
+    try:
+        image_binary = requester.get_image(
+            HazardImageRequest(
+                resource=resource,
+                tile=Tile(x, y, z),
+                colormap=colormap,
+                format=format,
+                scenario_id=scenarioId,
+                year=year,
+                group_ids=["osc"],
+                max_value=maxValue,
+                min_value=minValue,
+                index_value=indexValue,
+            )
         )
-    )
-    return Response(content=image_binary, media_type="image/png")
+        return Response(content=image_binary, media_type="image/png")
+    except TileNotAvailableError as e:
+        logger.error(f"No tile for array {e}")
+        raise HTTPException(404)
+    except Exception as e:
+        logger.error(f"No tile: {e}")
+        raise HTTPException(404)
 
 
 @app.get("/api/reset")
