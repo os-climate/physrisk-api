@@ -1,6 +1,6 @@
 [project]
 name = "physrisk-api"
-version = "v1.0.7"
+version = "1.3.2"
 description = "OS-Climate Physical Risk API"
 authors = [
   { name = "Joe Moorhouse", email = "5102656+joemoorhouse@users.noreply.github.com" },
