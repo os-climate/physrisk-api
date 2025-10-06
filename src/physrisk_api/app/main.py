@@ -1,6 +1,6 @@
 import logging
 import logging.config
-from typing import Annotated, Optional
+from typing import Annotated, Any, Optional
 from fastapi import Depends, FastAPI, HTTPException, Path, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 from physrisk.api.v1.exposure_req_resp import (
@@ -13,7 +13,13 @@ from physrisk.api.v1.hazard_data import (
     HazardDataRequest,
     HazardDataResponse,
 )
-from physrisk.api.v1.hazard_image import HazardImageRequest, Tile
+from physrisk.api.v1.hazard_image import (
+    HazardImageRequest,
+    Tile,
+    TileNotAvailableError,
+    HazardImageInfoRequest,
+    HazardImageInfoResponse,
+)
 from physrisk.api.v1.impact_req_resp import AssetImpactRequest, AssetImpactResponse
 from physrisk.requests import Requester
 import uvicorn
@@ -134,6 +140,18 @@ def get_image(
     return Response(content=image_binary, media_type="image/png")
 
 
+@app.post("/api/get_image_info")
+def get_image_info(
+    request: HazardImageInfoRequest, requester: Annotated[Requester, Depends(requester)]
+) -> HazardImageInfoResponse:
+    try:
+        response = requester.get_image_info(request)
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(status_code=400, detail="Invalid 'get_image_info' request")
+    return response
+
+
 @app.get("/api/tiles/{resource:path}/{z}/{x}/{y}.{format}")
 def get_tile(
     resource: str,
@@ -153,26 +171,38 @@ def get_tile(
     colormap: Annotated[
         Optional[str], Query(description="Maximum value", examples=["flare"])
     ] = None,
+    indexValue: Annotated[  # noqa: N803
+        Optional[Any],
+        Query(description="Index (non-spatial dimension) value", examples=[0]),
+    ] = None,
 ):
     """Request that physrisk converts an array to image.
     The request will return the requested tile if an array pyramid exists; otherwise an
     exception is thrown.
     """
     logger.info(f"Creating raster image for {resource}.")
-    image_binary = requester.get_image(
-        HazardImageRequest(
-            resource=resource,
-            tile=Tile(x, y, z),
-            colormap=colormap,
-            format=format,
-            scenario_id=scenarioId,
-            year=year,
-            group_ids=["osc"],
-            max_value=maxValue,
-            min_value=minValue,
+    try:
+        image_binary = requester.get_image(
+            HazardImageRequest(
+                resource=resource,
+                tile=Tile(x, y, z),
+                colormap=colormap,
+                format=format,
+                scenario_id=scenarioId,
+                year=year,
+                group_ids=["osc"],
+                max_value=maxValue,
+                min_value=minValue,
+                index_value=indexValue,
+            )
         )
-    )
-    return Response(content=image_binary, media_type="image/png")
+        return Response(content=image_binary, media_type="image/png")
+    except TileNotAvailableError as e:
+        logger.error(f"No tile for array {e}")
+        raise HTTPException(404)
+    except Exception as e:
+        logger.error(f"No tile: {e}")
+        raise HTTPException(404)
 
 
 @app.get("/api/reset")
