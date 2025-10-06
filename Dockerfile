@@ -1,4 +1,7 @@
-FROM registry.access.redhat.com/ubi9/ubi-minimal
+# Install uv
+FROM python:3.12-slim
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Create working directory
 RUN mkdir -p /usr/local/src/app
@@ -6,23 +9,8 @@ RUN mkdir -p /usr/local/src/app
 COPY . /usr/local/src/app
 # Enter working directory
 WORKDIR /usr/local/src/app
-
-# Install
-RUN \
-    # Install shadow-utils for adduser functionality
-    microdnf -y install shadow-utils \
-    # Install Python 3.9
-    && microdnf -y install python39 pip \
-    # Install pdm
-    && pip install -U pdm
     
-RUN  \
-    # Install application
-    pdm install --check --prod --no-editable
-
-RUN  \
-    # Clean up unnecessary data
-    microdnf clean all && rm -rf /var/cache/yum
+RUN uv sync --locked
 
 # Run as non-root user
 RUN adduser physrisk-api
