@@ -1520,7 +1520,7 @@ pytest = [
 
 [[package]]
 name = "physrisk-api"
-version = "1.3.2"
+version = "1.4.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
@@ -1543,7 +1543,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", extras = ["standard"] },
-    { name = "physrisk-lib", specifier = ">=1.3.2" },
+    { name = "physrisk-lib", specifier = ">=1.4.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -1561,7 +1561,7 @@ test = [
 
 [[package]]
 name = "physrisk-lib"
-version = "1.3.2"
+version = "1.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "affine" },
@@ -1584,9 +1584,9 @@ dependencies = [
     { name = "zarr", version = "2.18.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "zarr", version = "2.18.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0a/17/e65987da84c416813fbd7e92abe54992de309d784efc1dbbfc4885a85eff/physrisk_lib-1.3.2.tar.gz", hash = "sha256:4443f39dc5cde9fb9718e951380a3566a14313b8444f378432192bc9db5c2b68", size = 348461, upload-time = "2025-09-07T21:11:05.569Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/15/7c/70f671a7e4647d240ff96b4bcf11ab340934222dbd4d36f5af693e69965f/physrisk_lib-1.4.0.tar.gz", hash = "sha256:88f8eb1b2a977fd0c775942c3f63842b726b4cbe746c6ec50181ff518d519a68", size = 350102, upload-time = "2025-10-06T16:32:16.361Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/22/20/4decbc66faf6c37703d5247c6cdb7aedc7e16879295863cfa3df1b4f5c72/physrisk_lib-1.3.2-py3-none-any.whl", hash = "sha256:3b62344390d7df5988b412737fc74fa08e0958cb0ff9a6bc79c8b8e81acfa4a4", size = 374339, upload-time = "2025-09-07T21:11:03.932Z" },
+    { url = "https://files.pythonhosted.org/packages/af/82/b65a26b93f87f6a43cf9cadc0287693cf4be650758c69b277ae421b4028c/physrisk_lib-1.4.0-py3-none-any.whl", hash = "sha256:03780a7eaa0d02261848f6c17dac6eaaa670e911a888b7f1931f3ad5ef827c02", size = 376103, upload-time = "2025-10-06T16:32:14.457Z" },
 ]
 
 [[package]]
