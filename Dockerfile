@@ -22,5 +22,7 @@ EXPOSE 8081
 # Add venv into PATH
 ENV PATH="/usr/local/src/app/.venv/bin:$PATH"
 
+ENV NUMBA_CACHE_DIR="/tmp"
+
 # Run FastAPI application
 CMD ["fastapi", "run", "src/physrisk_api/app/main.py", "--port", "8081", "--workers", "1"]
