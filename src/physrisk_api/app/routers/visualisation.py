@@ -9,9 +9,9 @@ from physrisk.requests import Requester
 from physrisk.api.v1.hazard_image import (
     HazardImageRequest,
     Tile,
-    # TileNotAvailableError,
-    # HazardImageInfoRequest,
-    # HazardImageInfoResponse,
+    TileNotAvailableError,
+    HazardImageInfoRequest,
+    HazardImageInfoResponse,
 )
 
 from physrisk_api.app.routers.container import requester
@@ -60,16 +60,16 @@ def get_image(
     return Response(content=image_binary, media_type="image/png")
 
 
-# @router.post("/get_image_info")
-# def get_image_info(
-#     request: HazardImageInfoRequest, requester: Annotated[Requester, Depends(requester)]
-# ) -> HazardImageInfoResponse:
-#     try:
-#         response = requester.get_image_info(request)
-#     except Exception as e:
-#         logger.exception(e)
-#         raise HTTPException(status_code=400, detail="Invalid 'get_image_info' request")
-#     return response
+@router.post("/get_image_info")
+def get_image_info(
+    request: HazardImageInfoRequest, requester: Annotated[Requester, Depends(requester)]
+) -> HazardImageInfoResponse:
+    try:
+        response = requester.get_image_info(request)
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(status_code=400, detail="Invalid 'get_image_info' request")
+    return response
 
 
 @router.get("/tiles/{resource:path}/{z}/{x}/{y}.{format}")
@@ -118,9 +118,9 @@ def get_tile(
             )
         )
         return Response(content=image_binary, media_type="image/png")
-    # except TileNotAvailableError as e:
-    #     logger.error(f"No tile for array {e}")
-    #     raise HTTPException(404)
+    except TileNotAvailableError as e:
+         logger.error(f"No tile for array {e}")
+         raise HTTPException(404)
     except Exception as e:
         logger.error(f"No tile: {e}")
         raise HTTPException(404) from e

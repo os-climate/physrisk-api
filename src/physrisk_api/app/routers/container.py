@@ -7,10 +7,10 @@ router = APIRouter(tags=["container"])
 container = create_container()
 
 
-def requester():
+async def requester():
     """Provide a Requester instance resolved from the DI container."""
     # We mainly use FastAPI's own dependency injection via Depends, but dependencies can have access to
-    #  dependency_injector's declarative container.
+    # dependency_injector's declarative container.
     return container.requester()
 
 

@@ -9,7 +9,7 @@ import uvicorn
 
 from physrisk_api.app.logging_config import LOGGING_CONFIG
 
-from physrisk_api.app.routers import container, asset, hazard, sources
+from physrisk_api.app.routers import container, asset, hazard, visualisation
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -29,12 +29,12 @@ app.add_middleware(
 app.include_router(container.router)
 app.include_router(asset.router)
 app.include_router(hazard.router)
-app.include_router(sources.router)
+app.include_router(visualisation.router)
 
 
 @app.get("/")
 async def root():
-    """Return a simple message to confirm the Physrisk API is running."""
+    """Return a simple message to confirm the physrisk API is running."""
     logger.info("Physrisk API")
     return {"message": "Physrisk API"}
 

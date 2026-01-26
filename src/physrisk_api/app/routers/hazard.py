@@ -23,11 +23,11 @@ router = APIRouter(prefix="/api", tags=["hazard"])
 def get_hazard_data(
     request: HazardDataRequest, requester: Annotated[Requester, Depends(requester)]
 ) -> HazardDataResponse:
-    """Obtain a list of hazard data. This request is made through the `get_hazard_data` function from `physrisk-lib`.
+    """Obtain hazard data for a set of locations.
 
     Args:
-        request (HazardDataRequest): Object containing the request parameters. This includes the list of hazard data requests. For each request, there is a pair of geographic coordinates, as well as the hazard type, indicator, year, and projection scenario. It also includes the desired interpolation.
-        requester (Requester): Object that manages requests to the `physrisk-lib` services.
+        request (HazardDataRequest): Hazard data request items. Each item comprises location data, as well as the hazard type, indicator, year, and historical/projection scenario.
+        requester (Requester): Object that manages requests to the `physrisk` calculation engine.
 
     Returns:
         HazardDataResponse: Object containing the list of hazard data. For each request, an object with the requested data is returned.
@@ -55,22 +55,16 @@ def get_hazard_data_availability(
     request: HazardAvailabilityRequest,
     requester: Annotated[Requester, Depends(requester)],
 ) -> HazardAvailabilityResponse:
-    """Obtain the information for all the hazard resources.
-
-    This information includes the next metadata:
-        - Display name (used in the frontend).
-        - Route for the maps and data inside the bucket of S3.
-        - Scale, units, etc.
-    In fact, this information is a version of the `inventory.json` adapted to the needs of the frontend.
-
-    The function from `physrisk-lib` used to obtain this information is `get_hazard_data_availability`.
+    """Obtain information about available hazard resources.
+    
+    This information largely encapsulates `inventory.json` adapted to the needs of the frontend.
 
     Args:
-        request (HazardAvailabilityRequest): At this moment, this object is not processed by the flow of `get_hazard_data_availability`. The idea could be limit the information to certain hazard types, indicators, etc. But at this moment, it is not implemented.
-        requester (Requester): Object that manages requests to the `physrisk-lib` services.
+        request (HazardAvailabilityRequest): Currently unused, but reserved for future extensions.
+        requester (Requester): Object that manages requests to the `physrisk` calculation engine.
 
     Returns:
-        HazardAvailabilityResponse: Object containing the information about the hazard resources. This information is used to build the Hazard viewer in the frontend. As it was mentioned before, this information is the same from the `inventory.json`.
+        HazardAvailabilityResponse: Contains information about available hazard resources.
 
     """
     response = requester.get_hazard_data_availability(request)

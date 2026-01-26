@@ -22,18 +22,15 @@ router = APIRouter(prefix="/api", tags=["asset"])
 def get_asset_exposure(
     request: AssetExposureRequest, requester: Annotated[Requester, Depends(requester)]
 ) -> AssetExposureResponse:
-    """Retrieve hazard exposure information for an asset.
-
-    This endpoint uses the functionality provided by ``physrisk-lib``, specifically `get_asset_exposures`.
+    """Retrieve the hazard exposure for a portfolio of assets.
 
     Args:
-        request (AssetExposureRequest): The request body containing the asset
+        request (AssetExposureRequest): Contains asset
             details and parameters required to compute hazard exposures.
-        requester (Requester): Dependency that provides access to the service to
-            use `physrisk-lib` to compute asset exposures.
+        requester (Requester): Object that manages requests to the `physrisk` calculation engine.
 
     Returns:
-        AssetExposureResponse: Response for asset exposure information.
+        AssetExposureResponse: Contains asset exposure information.
 
     """
     response = requester.get_asset_exposures(request)
@@ -44,19 +41,16 @@ def get_asset_exposure(
 def get_asset_impact(
     request: AssetImpactRequest, requester: Annotated[Requester, Depends(requester)]
 ) -> AssetImpactResponse:
-    """Retrieve impact data for a group of assets, given a set of hazards (indicators), projection years, and scenarios.
-
-    To do so, it directly uses the functionality provided by `physrisk-lib` called `get_asset_impacts`.
+    """Calculate asset impact results for a portfolio of assets, for a given set of projection years, and scenarios.
+    Results comprise quantitative asset-level impacts and scores inferred from these.
 
     Args:
         request (AssetImpactRequest): The request body containing asset portfolio with their details, along with the
-            scenarios, years, and hazards to be evaluated.
-        requester (Requester): Dependency that provides access to the service
-            responsible for computing asset impacts.
+            scenarios, years, and settings (including scope of hazards to be evaluated).
+        requester (Requester): Object that manages requests to the `physrisk` calculation engine.
 
     Returns:
-        AssetImpactResponse : The calculated impact
-        data for the specified assets and hazards. The return type are different deppending on the processing of the request. CustomAssetImpactResponse is created in this API and it is documented, while AssetImpactResponse is the original response from physrisk-lib, which is not documented in this repository
+        AssetImpactResponse : The calculated impacts and scores for the requested assets, according to request settings.
 
     Raises:
         HTTPException:
@@ -70,4 +64,17 @@ def get_asset_impact(
         raise HTTPException(
             status_code=400, detail="Invalid 'get_asset_impact' request"
         ) from e
+    return response
+
+
+@router.get("/get_example_portfolios")
+def get_example_portfolios(
+    requester: Annotated[Requester, Depends(requester)]):
+    try:
+        response = requester.get_example_portfolios()
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(
+            status_code=400, detail="Error getting example portfolios"
+        )
     return response
