@@ -56,7 +56,7 @@ def get_hazard_data_availability(
     requester: Annotated[Requester, Depends(requester)],
 ) -> HazardAvailabilityResponse:
     """Obtain information about available hazard resources.
-    
+
     This information largely encapsulates `inventory.json` adapted to the needs of the frontend.
 
     Args:

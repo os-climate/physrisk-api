@@ -119,8 +119,8 @@ def get_tile(
         )
         return Response(content=image_binary, media_type="image/png")
     except TileNotAvailableError as e:
-         logger.error(f"No tile for array {e}")
-         raise HTTPException(404)
+        logger.error(f"No tile for array {e}")
+        raise HTTPException(404)
     except Exception as e:
         logger.error(f"No tile: {e}")
         raise HTTPException(404) from e
