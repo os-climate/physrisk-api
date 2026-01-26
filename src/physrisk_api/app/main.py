@@ -102,6 +102,19 @@ def get_asset_impact(
     return response
 
 
+@app.get("/api/get_example_portfolios")
+def get_example_portfolios(
+    requester: Annotated[Requester, Depends(requester)]):
+    try:
+        response = requester.get_example_portfolios()
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(
+            status_code=400, detail="Error getting example portfolios"
+        )
+    return response
+
+
 @app.get("/api/images/{resource:path}.{format}")
 def get_image(
     resource: str,
