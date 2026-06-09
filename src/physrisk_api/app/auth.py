@@ -32,21 +32,33 @@ def validate_api_key(key: str) -> list[str]:
     """Validate an API key and return its scopes. Replace with OIDC validation later."""
     scopes = _api_keys().get(key)
     if scopes is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid API key"
+        )
     return scopes
 
 
 def issue_token(scopes: list[str]) -> str:
     """Issue a signed access JWT embedding the given scopes."""
     now = int(time.time())
-    payload = {"type": "access", "scopes": scopes, "iat": now, "exp": now + TOKEN_EXPIRE_SECONDS}
+    payload = {
+        "type": "access",
+        "scopes": scopes,
+        "iat": now,
+        "exp": now + TOKEN_EXPIRE_SECONDS,
+    }
     return jwt.encode(payload, _jwt_secret(), algorithm=ALGORITHM)
 
 
 def issue_refresh_token(scopes: list[str]) -> str:
     """Issue a signed refresh JWT embedding the given scopes."""
     now = int(time.time())
-    payload = {"type": "refresh", "scopes": scopes, "iat": now, "exp": now + REFRESH_TOKEN_EXPIRE_SECONDS}
+    payload = {
+        "type": "refresh",
+        "scopes": scopes,
+        "iat": now,
+        "exp": now + REFRESH_TOKEN_EXPIRE_SECONDS,
+    }
     return jwt.encode(payload, _jwt_secret(), algorithm=ALGORITHM)
 
 
@@ -55,11 +67,17 @@ def validate_refresh_token(token: str) -> list[str]:
     try:
         payload = jwt.decode(token, _jwt_secret(), algorithms=[ALGORITHM])
     except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token expired")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token expired"
+        )
     except jwt.PyJWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
+        )
     if payload.get("type") != "refresh":
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
+        )
     return payload.get("scopes", [])
 
 
@@ -73,18 +91,25 @@ def get_current_user(
     try:
         payload = jwt.decode(token, _jwt_secret(), algorithms=[ALGORITHM])
         if payload.get("type") == "refresh":
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Use access token, not refresh token")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Use access token, not refresh token",
+            )
         return payload
     except HTTPException:
         raise
     except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired"
+        )
     except jwt.PyJWTError:
         pass  # not a JWT — try as an API key
     scopes = _api_keys().get(token)
     if scopes is not None:
         return {"scopes": scopes}
-    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+    )
 
 
 def require_scope(scope: str):

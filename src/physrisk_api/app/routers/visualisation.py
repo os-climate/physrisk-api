@@ -50,7 +50,9 @@ def get_image(
     Otherwise use tiled form of request.
     """
     logger.info(f"Creating whole-array image for {resource}.")
-    group_ids = ["osc"] + [_SCOPE_GROUPS[s] for s in user.get("scopes", []) if s in _SCOPE_GROUPS]
+    group_ids = ["osc"] + [
+        _SCOPE_GROUPS[s] for s in user.get("scopes", []) if s in _SCOPE_GROUPS
+    ]
     image_binary = requester.get_image(
         HazardImageRequest(
             resource=resource,
@@ -110,7 +112,9 @@ def get_tile(
     exception is thrown.
     """
     logger.info(f"Creating raster image for {resource}.")
-    group_ids = ["osc"] + [_SCOPE_GROUPS[s] for s in user.get("scopes", []) if s in _SCOPE_GROUPS]
+    group_ids = ["osc"] + [
+        _SCOPE_GROUPS[s] for s in user.get("scopes", []) if s in _SCOPE_GROUPS
+    ]
     try:
         image_binary = requester.get_image(
             HazardImageRequest(
