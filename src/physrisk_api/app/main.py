@@ -9,7 +9,7 @@ import uvicorn
 
 from physrisk_api.app.logging_config import LOGGING_CONFIG
 
-from physrisk_api.app.routers import container, asset, hazard, visualisation
+from physrisk_api.app.routers import auth, container, asset, hazard, visualisation
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -26,6 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
 app.include_router(container.router)
 app.include_router(asset.router)
 app.include_router(hazard.router)
