@@ -14,7 +14,12 @@ from physrisk.api.v1.hazard_image import (
     HazardImageInfoResponse,
 )
 
+from physrisk_api.app.auth import get_current_user
 from physrisk_api.app.routers.container import requester
+
+_SCOPE_GROUPS: dict[str, str] = {
+    "jba/api": "jba",
+}
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -28,6 +33,7 @@ def get_image(
     scenarioId: str,  # noqa: N803
     year: int,
     requester: Annotated[Requester, Depends(requester)],
+    user: Annotated[dict, Depends(get_current_user)],
     minValue: Annotated[  # noqa: N803
         Optional[float], Query(description="Minimum value", examples=[0])
     ] = None,
@@ -44,6 +50,9 @@ def get_image(
     Otherwise use tiled form of request.
     """
     logger.info(f"Creating whole-array image for {resource}.")
+    group_ids = ["osc"] + [
+        _SCOPE_GROUPS[s] for s in user.get("scopes", []) if s in _SCOPE_GROUPS
+    ]
     image_binary = requester.get_image(
         HazardImageRequest(
             resource=resource,
@@ -52,7 +61,7 @@ def get_image(
             format=format,
             scenario_id=scenarioId,
             year=year,
-            group_ids=["osc"],
+            group_ids=group_ids,
             max_value=maxValue,
             min_value=minValue,
         )
@@ -80,6 +89,7 @@ def get_tile(
     y: int,
     z: int,
     requester: Annotated[Requester, Depends(requester)],
+    user: Annotated[dict, Depends(get_current_user)],
     scenarioId: str,  # noqa: N803
     year: int,
     minValue: Annotated[  # noqa: N803
@@ -102,6 +112,9 @@ def get_tile(
     exception is thrown.
     """
     logger.info(f"Creating raster image for {resource}.")
+    group_ids = ["osc"] + [
+        _SCOPE_GROUPS[s] for s in user.get("scopes", []) if s in _SCOPE_GROUPS
+    ]
     try:
         image_binary = requester.get_image(
             HazardImageRequest(
@@ -111,7 +124,7 @@ def get_tile(
                 format=format,
                 scenario_id=scenarioId,
                 year=year,
-                group_ids=["osc"],
+                group_ids=group_ids,
                 max_value=maxValue,
                 min_value=minValue,
                 index_value=indexValue,
@@ -121,6 +134,9 @@ def get_tile(
     except TileNotAvailableError as e:
         logger.error(f"No tile for array {e}")
         raise HTTPException(404)
+    except PermissionError as e:
+        logger.error(f"Forbidden: {e}")
+        raise HTTPException(403) from e
     except Exception as e:
         logger.error(f"No tile: {e}")
         raise HTTPException(404) from e
