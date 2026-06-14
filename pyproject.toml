@@ -29,7 +29,7 @@ classifiers = [
 ]
 dependencies = [
   "fastapi[standard]",
-  "physrisk-lib>=1.6.1",
+  "physrisk-lib>=1.9.11",
   "PyJWT[cryptography]>=2.8"
 ]
 
