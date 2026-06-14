@@ -2,6 +2,7 @@
 
 import logging
 import logging.config
+from importlib.metadata import version
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -38,6 +39,12 @@ async def root():
     """Return a simple message to confirm the physrisk API is running."""
     logger.info("Physrisk API")
     return {"message": "Physrisk API"}
+
+
+@app.get("/api/version")
+async def get_version():
+    """Return the version of the physrisk library in use."""
+    return {"physrisk-lib": version("physrisk-lib")}
 
 
 if __name__ == "__main__":
