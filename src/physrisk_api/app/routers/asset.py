@@ -11,6 +11,7 @@ from physrisk.api.v1.exposure_req_resp import (
     AssetExposureResponse,
 )
 from physrisk.api.v1.impact_req_resp import AssetImpactRequest, AssetImpactResponse
+from physrisk_api.app.auth import get_current_user, provider_limits
 from physrisk_api.app.routers.container import requester
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -20,7 +21,9 @@ router = APIRouter(prefix="/api", tags=["asset"])
 
 @router.post("/get_asset_exposure")
 def get_asset_exposure(
-    request: AssetExposureRequest, requester: Annotated[Requester, Depends(requester)]
+    request: AssetExposureRequest,
+    requester: Annotated[Requester, Depends(requester)],
+    user: Annotated[dict, Depends(get_current_user)],
 ) -> AssetExposureResponse:
     """Retrieve the hazard exposure for a portfolio of assets.
 
@@ -33,13 +36,16 @@ def get_asset_exposure(
         AssetExposureResponse: Contains asset exposure information.
 
     """
+    request.provider_max_requests = provider_limits(user)
     response = requester.get_asset_exposures(request)
     return response
 
 
 @router.post("/get_asset_impact")
 def get_asset_impact(
-    request: AssetImpactRequest, requester: Annotated[Requester, Depends(requester)]
+    request: AssetImpactRequest,
+    requester: Annotated[Requester, Depends(requester)],
+    user: Annotated[dict, Depends(get_current_user)],
 ) -> AssetImpactResponse:
     """Calculate asset impact results for a portfolio of assets, for a given set of projection years, and scenarios.
     Results comprise quantitative asset-level impacts and scores inferred from these.
@@ -57,6 +63,7 @@ def get_asset_impact(
             - 400: If the request is invalid or an error occurs while computing asset impacts.
 
     """
+    request.provider_max_requests = provider_limits(user)
     try:
         response = requester.get_asset_impacts(request)
     except Exception as e:
