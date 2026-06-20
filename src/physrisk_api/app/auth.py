@@ -112,6 +112,14 @@ def get_current_user(
     )
 
 
+JBA_MAX_REQUESTS = 20
+
+
+def provider_limits(user: dict) -> dict[str, int]:
+    """Return provider_max_requests dict based on user scopes."""
+    return {"jba": JBA_MAX_REQUESTS if "jba/api" in user.get("scopes", []) else -1}
+
+
 def require_scope(scope: str):
     """FastAPI dependency factory that enforces a named scope on a route."""
 

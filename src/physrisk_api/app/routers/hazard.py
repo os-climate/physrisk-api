@@ -12,6 +12,7 @@ from physrisk.api.v1.hazard_data import (
     HazardDataRequest,
     HazardDataResponse,
 )
+from physrisk_api.app.auth import get_current_user, provider_limits
 from physrisk_api.app.routers.container import requester
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -21,7 +22,9 @@ router = APIRouter(prefix="/api", tags=["hazard"])
 
 @router.post("/get_hazard_data")
 def get_hazard_data(
-    request: HazardDataRequest, requester: Annotated[Requester, Depends(requester)]
+    request: HazardDataRequest,
+    requester: Annotated[Requester, Depends(requester)],
+    user: Annotated[dict, Depends(get_current_user)],
 ) -> HazardDataResponse:
     """Obtain hazard data for a set of locations.
 
@@ -36,6 +39,8 @@ def get_hazard_data(
         HTTPException: If the request is invalid or if no results are returned.
 
     """
+    
+    request.provider_max_requests = provider_limits(user)
     try:
         response = requester.get_hazard_data(request)
     except Exception as e:
