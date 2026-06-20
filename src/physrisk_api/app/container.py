@@ -18,11 +18,11 @@ def create_container():
     container.override_providers(zarr_store=providers.Singleton(provide_s3_zarr_store))
 
     hazard_cache_dir = os.environ.get("PHYSRISK_CACHE_DIR", "/tmp")
-    # cache any API calls to LMDB, on a volume, location specified by env variable  
+    # cache any API calls to LMDB, on a volume, location specified by env variable
     container.override_providers(
         cache_store=providers.Singleton(
             GeometryH3BasedCache,
-                store=LMDBStore(str(pathlib.Path(hazard_cache_dir) / "hazard_cache.db")),
+            store=LMDBStore(str(pathlib.Path(hazard_cache_dir) / "hazard_cache.db")),
         )
     )
 

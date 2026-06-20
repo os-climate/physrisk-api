@@ -40,7 +40,7 @@ def get_hazard_data(
         HTTPException: If the request is invalid or if no results are returned.
 
     """
-    
+
     request.provider_max_requests = provider_limits(user)
     try:
         response = requester.get_hazard_data(request)
