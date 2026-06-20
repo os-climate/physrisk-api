@@ -1713,7 +1713,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", extras = ["standard"] },
-    { name = "physrisk-lib", specifier = ">=1.9.12" },
+    { name = "physrisk-lib", specifier = ">=1.9.13" },
     { name = "pyjwt", extras = ["cryptography"], specifier = ">=2.8" },
 ]
 
@@ -1732,7 +1732,7 @@ test = [
 
 [[package]]
 name = "physrisk-lib"
-version = "1.9.12"
+version = "1.9.13"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "affine" },
@@ -1758,9 +1758,9 @@ dependencies = [
     { name = "zarr", version = "2.18.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "zarr", version = "2.18.7", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/17/95/f501d0f11044ae87d96f6bb773455292c3d1948bd00b9b78dd4c4062e947/physrisk_lib-1.9.12.tar.gz", hash = "sha256:716c7f64379e185fb864e74eba15f54d0bb5c1eb20e66798e40f5582b3bba5ea", size = 5243126, upload-time = "2026-06-20T20:01:23.989Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/27/aa/fc8395ce3bf45c10fe8aa83dc1a9ea09bff457e3482572cf16bbfd6375f4/physrisk_lib-1.9.13.tar.gz", hash = "sha256:ea0605c82474c5f44033da2681d9cf54e65e57048b51a7bafda6e8b00cb47c81", size = 5243581, upload-time = "2026-06-20T20:50:05.092Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/49/03/5643c269e52257acd44126fbb8e12eeb106505b09fb0aa470c4e2da00b22/physrisk_lib-1.9.12-py3-none-any.whl", hash = "sha256:46d852d3778553fe164def4bf4c77925f5d67ab1d7289168649b0bd9fa44638e", size = 5281514, upload-time = "2026-06-20T20:01:22.125Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/bb/b91a8aaa7788f8ea4ba9a4de36dff66ffb165491e0599a7e0451027f4a2f/physrisk_lib-1.9.13-py3-none-any.whl", hash = "sha256:5a9d15994a1a0eb5fa2a2f29b72e98089dec490cc2fd054f8504bb32bbb7dfe0", size = 5282560, upload-time = "2026-06-20T20:50:02.638Z" },
 ]
 
 [[package]]
