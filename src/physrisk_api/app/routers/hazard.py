@@ -11,6 +11,7 @@ from physrisk.api.v1.hazard_data import (
     HazardAvailabilityResponse,
     HazardDataRequest,
     HazardDataResponse,
+    StaticInformationResponse,
 )
 from physrisk_api.app.auth import get_current_user, provider_limits
 from physrisk_api.app.routers.container import requester
@@ -53,6 +54,14 @@ def get_hazard_data(
         logger.error(detail)
         raise HTTPException(status_code=404, detail=detail)
     return response
+
+
+@router.get("/get_static_information")
+def get_static_information(
+    requester: Annotated[Requester, Depends(requester)],
+) -> StaticInformationResponse:
+    """Return static information: scenario descriptions and OED occupancy codes."""
+    return requester.get_static_information()
 
 
 @router.post("/get_hazard_data_availability")
