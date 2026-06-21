@@ -15,6 +15,7 @@ def create_container():
     if os.path.exists(dotenv_path):
         load_dotenv(dotenv_path=dotenv_path, override=True)
     container = Container()
+    container.config.zarr_max_workers.override(16)
     container.override_providers(zarr_store=providers.Singleton(provide_s3_zarr_store))
 
     hazard_cache_dir = os.environ.get("PHYSRISK_CACHE_DIR", "/tmp")
