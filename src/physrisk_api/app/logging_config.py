@@ -23,6 +23,11 @@ LOGGING_CONFIG = {
             "handlers": ["default"],
             "propagate": False,
         },
+        "physrisk": {
+            "level": "INFO",
+            "handlers": ["default"],
+            "propagate": False,
+        },
         "uvicorn.error": {
             "level": "DEBUG",
             "handlers": ["default"],
