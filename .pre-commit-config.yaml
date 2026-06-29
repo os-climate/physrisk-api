@@ -16,13 +16,13 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.5
+    rev: v1.5.6
     hooks:
       - id: remove-tabs
         exclude: ^.*(\.(tsv)|Makefile)$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.11
+    rev: v0.15.20
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix, --config=pyproject.toml]
@@ -38,7 +38,7 @@ repos:
           then /bin/mkdir .mypy_cache; fi; exit 0'
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.19.1"
+    rev: "v2.1.0"
     hooks:
       - id: mypy
         verbose: true
