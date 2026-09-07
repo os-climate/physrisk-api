@@ -1,4 +1,5 @@
 from unittest import mock
+
 from fastapi.testclient import TestClient
 from physrisk.api.v1.hazard_data import (
     # HazardAvailabilityRequest,

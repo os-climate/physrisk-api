@@ -3,15 +3,13 @@
 import logging
 import logging.config
 from importlib.metadata import version
+
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import uvicorn
-
 from physrisk_api.app.logging_config import LOGGING_CONFIG
-
-from physrisk_api.app.routers import auth, container, asset, hazard, visualisation
-
+from physrisk_api.app.routers import asset, auth, container, hazard, visualisation
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
