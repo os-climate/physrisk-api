@@ -1,6 +1,5 @@
 import os
 
-
 ROOT_LEVEL = os.environ.get("PROD", "INFO")
 
 LOGGING_CONFIG = {
