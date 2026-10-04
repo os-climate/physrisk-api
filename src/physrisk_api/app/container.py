@@ -53,7 +53,9 @@ def provide_s3_zarr_store():
     s3 = (
         s3fs.S3FileSystem(anon=True)
         if access_key == ""
-        else s3fs.S3FileSystem(anon=False, key=access_key, secret=secret_key, cache_type="none")
+        else s3fs.S3FileSystem(
+            anon=False, key=access_key, secret=secret_key, cache_type="none"
+        )
     )
 
     store = s3fs.S3Map(
