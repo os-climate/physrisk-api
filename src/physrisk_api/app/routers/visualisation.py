@@ -3,7 +3,7 @@
 import logging
 import logging.config
 from physrisk_api.app.logging_config import LOGGING_CONFIG
-from typing import Annotated, Optional, Any
+from typing import Annotated, Optional, Any, Literal
 from fastapi import APIRouter, Depends, Path, Query, Response, HTTPException
 from physrisk.requests import Requester
 from physrisk.api.v1.hazard_image import (
@@ -43,6 +43,14 @@ def get_image(
     colormap: Annotated[
         Optional[str], Query(description="Maximum value", examples=["flare"])
     ] = None,
+    scaling: Annotated[
+        Optional[Literal["linear", "log"]],
+        Query(
+            description="Value-to-colour scaling: 'linear' or 'log'. "
+            "'log' requires minValue > 0.",
+            examples=["linear"],
+        ),
+    ] = None,
 ):
     """Request that physrisk converts an array to image.
 
@@ -64,6 +72,7 @@ def get_image(
             group_ids=group_ids,
             max_value=maxValue,
             min_value=minValue,
+            scaling=scaling,
         )
     )
     return Response(content=image_binary, media_type="image/png")
@@ -105,6 +114,23 @@ def get_tile(
         Optional[Any],
         Query(description="Index (non-spatial dimension) value", examples=[0]),
     ] = None,
+    scaling: Annotated[
+        Optional[Literal["linear", "log"]],
+        Query(
+            description="Value-to-colour scaling: 'linear' or 'log'. "
+            "'log' requires minValue > 0.",
+            examples=["linear"],
+        ),
+    ] = None,
+    tileSize: Annotated[  # noqa: N803
+        Optional[int],
+        Query(
+            description="Output tile size in pixels (256 or 512). Defaults to 512. "
+            "Only resources backed by JBA currently support 256 (fewer upstream "
+            "tile fetches, faster).",
+            examples=[512],
+        ),
+    ] = None,
 ):
     """Request that physrisk converts an array to image.
 
@@ -128,6 +154,8 @@ def get_tile(
                 max_value=maxValue,
                 min_value=minValue,
                 index_value=indexValue,
+                scaling=scaling,
+                tile_size=tileSize,
             )
         )
         return Response(content=image_binary, media_type="image/png")

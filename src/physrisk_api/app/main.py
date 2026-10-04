@@ -1,9 +1,12 @@
 """Entry point for the Physrisk API FastAPI application."""
 
+import gc
 import logging
 import logging.config
+import os
 from importlib.metadata import version
 from fastapi import FastAPI
+import psutil
 from fastapi.middleware.cors import CORSMiddleware
 
 import uvicorn
@@ -45,6 +48,14 @@ async def root():
 async def get_version():
     """Return the version of the physrisk library in use."""
     return {"physrisk-lib": version("physrisk-lib")}
+
+
+@app.get("/api/memory")
+async def get_memory():
+    """Return current process RSS memory usage in MB."""
+    gc.collect()
+    rss_mb = psutil.Process(os.getpid()).memory_info().rss / 1e6
+    return {"rss_mb": round(rss_mb, 1)}
 
 
 if __name__ == "__main__":
