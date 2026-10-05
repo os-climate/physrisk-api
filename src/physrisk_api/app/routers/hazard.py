@@ -2,10 +2,9 @@
 
 import logging
 import logging.config
-from physrisk_api.app.logging_config import LOGGING_CONFIG
 from typing import Annotated
-from fastapi import Depends, APIRouter, HTTPException
-from physrisk.requests import Requester
+
+from fastapi import APIRouter, Depends, HTTPException
 from physrisk.api.v1.hazard_data import (
     HazardAvailabilityRequest,
     HazardAvailabilityResponse,
@@ -13,7 +12,10 @@ from physrisk.api.v1.hazard_data import (
     HazardDataResponse,
     StaticInformationResponse,
 )
+from physrisk.requests import Requester
+
 from physrisk_api.app.auth import get_current_user, provider_limits
+from physrisk_api.app.logging_config import LOGGING_CONFIG
 from physrisk_api.app.routers.container import requester
 
 logging.config.dictConfig(LOGGING_CONFIG)
