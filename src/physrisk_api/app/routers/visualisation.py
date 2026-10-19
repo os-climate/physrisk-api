@@ -2,19 +2,20 @@
 
 import logging
 import logging.config
-from physrisk_api.app.logging_config import LOGGING_CONFIG
-from typing import Annotated, Optional, Any, Literal
-from fastapi import APIRouter, Depends, Path, Query, Response, HTTPException
-from physrisk.requests import Requester
+from typing import Annotated, Any, Literal
+
+from fastapi import APIRouter, Depends, HTTPException, Path, Query, Response
 from physrisk.api.v1.hazard_image import (
+    HazardImageInfoRequest,
+    HazardImageInfoResponse,
     HazardImageRequest,
     Tile,
     TileNotAvailableError,
-    HazardImageInfoRequest,
-    HazardImageInfoResponse,
 )
+from physrisk.requests import Requester
 
 from physrisk_api.app.auth import get_current_user
+from physrisk_api.app.logging_config import LOGGING_CONFIG
 from physrisk_api.app.routers.container import requester
 
 _SCOPE_GROUPS: dict[str, str] = {
@@ -35,16 +36,16 @@ def get_image(
     requester: Annotated[Requester, Depends(requester)],
     user: Annotated[dict, Depends(get_current_user)],
     minValue: Annotated[  # noqa: N803
-        Optional[float], Query(description="Minimum value", examples=[0])
+        float | None, Query(description="Minimum value", examples=[0])
     ] = None,
     maxValue: Annotated[  # noqa: N803
-        Optional[float], Query(description="Maximum value", examples=[3])
+        float | None, Query(description="Maximum value", examples=[3])
     ] = None,
     colormap: Annotated[
-        Optional[str], Query(description="Maximum value", examples=["flare"])
+        str | None, Query(description="Maximum value", examples=["flare"])
     ] = None,
     scaling: Annotated[
-        Optional[Literal["linear", "log"]],
+        Literal["linear", "log"] | None,
         Query(
             description="Value-to-colour scaling: 'linear' or 'log'. "
             "'log' requires minValue > 0.",
@@ -102,20 +103,20 @@ def get_tile(
     scenarioId: str,  # noqa: N803
     year: int,
     minValue: Annotated[  # noqa: N803
-        Optional[float], Query(description="Minimum value", examples=[0])
+        float | None, Query(description="Minimum value", examples=[0])
     ] = None,
     maxValue: Annotated[  # noqa: N803
-        Optional[float], Query(description="Maximum value", examples=[3])
+        float | None, Query(description="Maximum value", examples=[3])
     ] = None,
     colormap: Annotated[
-        Optional[str], Query(description="Maximum value", examples=["flare"])
+        str | None, Query(description="Maximum value", examples=["flare"])
     ] = None,
     indexValue: Annotated[  # noqa: N803
-        Optional[Any],
+        Any | None,
         Query(description="Index (non-spatial dimension) value", examples=[0]),
     ] = None,
     scaling: Annotated[
-        Optional[Literal["linear", "log"]],
+        Literal["linear", "log"] | None,
         Query(
             description="Value-to-colour scaling: 'linear' or 'log'. "
             "'log' requires minValue > 0.",
@@ -123,7 +124,7 @@ def get_tile(
         ),
     ] = None,
     tileSize: Annotated[  # noqa: N803
-        Optional[int],
+        int | None,
         Query(
             description="Output tile size in pixels (256 or 512). Defaults to 512. "
             "Only resources backed by JBA currently support 256 (fewer upstream "
