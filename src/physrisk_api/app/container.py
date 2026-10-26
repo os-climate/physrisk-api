@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import s3fs
 from physrisk.container import Container
 from physrisk.hazard_models.hazard_cache import GeometryH3BasedCache, LMDBStore
+import zarr
 
 
 def create_container():
@@ -58,9 +59,21 @@ def provide_s3_zarr_store():
         )
     )
 
+    local_path = os.environ.get("OSC_S3_LOCAL_PATH", "")
+    if local_path:
+        return provide_local_store(local_path)
+
     store = s3fs.S3Map(
         root=str(PurePosixPath(s3_bucket, zarr_path)),
         s3=s3,
         check=False,
+    )
+
+    return store
+
+
+def provide_local_store(local_path: str):
+    store = zarr.DirectoryStore(
+        os.path.join(local_path, "hazard.zarr")
     )
     return store
