@@ -13,7 +13,7 @@ on:
       - v*.*.*
 
 env:
-  python-version: "3.10"
+  python-version: "3.11"
 
 ### BUILD ###
 
@@ -30,13 +30,8 @@ jobs:
       - name: "Checkout repository"
         uses: actions/checkout@v4
 
-      - name: "Setup PDM for build commands"
-        uses: pdm-project/setup-pdm@v3
-        with:
-          version: 2.10.0
-
-      - name: "Setup Python 3.10"
-        uses: actions/setup-python@v4.7.0
+      - name: "Setup uv"
+        uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ env.python-version }}
 
@@ -45,9 +40,9 @@ jobs:
           echo "Github versioning: ${{ github.ref_name }}"
           scripts/release-versioning.sh
 
-      - name: "Build with PDM backend"
+      - name: "Build with uv"
         run: |
-          pdm build
+          uv build
 
       ### SIGNING ###
 
@@ -157,9 +152,6 @@ jobs:
             rm dist/buildvars.txt
           fi
           rm dist/*.crt dist/*.sig*
-
-      - name: "Setup PDM for build commands"
-        uses: pdm-project/setup-pdm@v3
 
       - name: "Publish release to PyPI"
         uses: pypa/gh-action-pypi-publish@release/v1
