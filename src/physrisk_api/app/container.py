@@ -73,7 +73,5 @@ def provide_s3_zarr_store():
 
 
 def provide_local_store(local_path: str):
-    store = zarr.DirectoryStore(
-        os.path.join(local_path, "hazard.zarr")
-    )
+    store = zarr.DirectoryStore(os.path.join(local_path, "hazard.zarr"))
     return store
