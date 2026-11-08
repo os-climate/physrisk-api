@@ -131,6 +131,19 @@ def get_tile(
             examples=[512],
         ),
     ] = None,
+    compareScenarioId: Annotated[  # noqa: N803
+        Optional[str],
+        Query(
+            description="If given, with compareYear, the tile shows the difference: "
+            "the value for scenarioId/year minus the value for "
+            "compareScenarioId/compareYear. Not supported for JBA resources.",
+            examples=["historical"],
+        ),
+    ] = None,
+    compareYear: Annotated[  # noqa: N803
+        Optional[int],
+        Query(description="Year to compare with.", examples=[1985]),
+    ] = None,
 ):
     """Request that physrisk converts an array to image.
 
@@ -156,6 +169,8 @@ def get_tile(
                 index_value=indexValue,
                 scaling=scaling,
                 tile_size=tileSize,
+                compare_scenario_id=compareScenarioId,
+                compare_year=compareYear,
             )
         )
         return Response(content=image_binary, media_type="image/png")
