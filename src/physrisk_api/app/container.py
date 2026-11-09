@@ -1,13 +1,13 @@
 import os
-from pathlib import PurePosixPath
 import pathlib
+from pathlib import PurePosixPath
 
+import s3fs
+import zarr
 from dependency_injector import providers
 from dotenv import load_dotenv
-import s3fs
 from physrisk.container import Container
 from physrisk.hazard_models.hazard_cache import GeometryH3BasedCache, LMDBStore
-import zarr
 
 
 def create_container():
