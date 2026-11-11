@@ -1526,7 +1526,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", extras = ["standard"] },
-    { name = "physrisk-lib", specifier = ">=1.10.6" },
+    { name = "physrisk-lib", specifier = ">=1.11.0" },
     { name = "psutil", specifier = ">=6.0" },
     { name = "pyjwt", extras = ["cryptography"], specifier = ">=2.8" },
 ]
@@ -1546,7 +1546,7 @@ test = [
 
 [[package]]
 name = "physrisk-lib"
-version = "1.10.6"
+version = "1.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "affine" },
@@ -1570,9 +1570,9 @@ dependencies = [
     { name = "virtualenv" },
     { name = "zarr" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/54/dc/6efccc3d1089830e36b89727b47216b8bffbe31e97d5edfe071d663f39e9/physrisk_lib-1.10.6.tar.gz", hash = "sha256:cd7d4dd1b17b42ae3f56e96caca3880ee8224bb0e5bd6f00300d7e9c09b91d0e", size = 5254666, upload-time = "2026-10-26T20:19:13.353Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fa/5e/c27a9bdddff5f08d2a36482c71c228186673f18819b23d229eed40f6fd55/physrisk_lib-1.11.0.tar.gz", hash = "sha256:47d1b8710a8b9ff2aceb940eb64f256f7b90ec961c5457ee3c7fe35c53a51d35", size = 5258829, upload-time = "2026-11-08T23:11:28.964Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e3/d3/039541186b67a7435976cb8b7940cdf3ad8aba6aeefbeb81f9339a193a28/physrisk_lib-1.10.6-py3-none-any.whl", hash = "sha256:08cd9d4a1edef8bd45c191f239af0db1368b883ee3148a84cafc14b3ec961ac0", size = 5294506, upload-time = "2026-10-26T20:19:10.982Z" },
+    { url = "https://files.pythonhosted.org/packages/4b/5b/7fe2c8914750e58718b19fc9e12c144c5e0da1f198ab21592d2722dffc6e/physrisk_lib-1.11.0-py3-none-any.whl", hash = "sha256:fdba060254452e035cbbf8af1298f2dd0eaa13f9648ce351a0eba0192bbfd54c", size = 5298900, upload-time = "2026-11-08T23:11:26.853Z" },
 ]
 
 [[package]]
