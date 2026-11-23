@@ -1,6 +1,7 @@
 """Endpoints and DI helpers for managing the dependency-injector container."""
 
 from fastapi import APIRouter
+
 from physrisk_api.app.container import create_container
 
 router = APIRouter(tags=["container"])
